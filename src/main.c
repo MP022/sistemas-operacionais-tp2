@@ -19,10 +19,16 @@ void parse_args(int argc,char ** argv){
 
 int main(int argc, char ** argv){
     parse_args(argc,argv);
+    printf("Executando o simulador...\n");
 
-    printf("%s\n", algoritmo);
-    printf("%s\n", diretorio);
-    printf("%d\n", tamBloco);
-    printf("%d\n", tamProce);
+    int pagLidas = 0, pagEscri = 0, totalAcesso = 0;
+
+    printf("Arquivo de entrada: %s\n", diretorio);
+    printf("Tamanho da memoria: %d KB\n", tamProce);
+    printf("Tamanho das páginas: %d KB\n", tamBloco);
+    printf("Tecnica de reposição: %s\n", algoritmo);
+    printf("Páginas lidas: %d\n", pagLidas);
+    printf("Páginas escritas: %d\n", pagEscri);
+    printf("Total de acessos: %d\n", totalAcesso);
     return 0;
 }
