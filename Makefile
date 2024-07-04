@@ -10,8 +10,8 @@ CFLAGS = -pg -Wall -c -I$(INC)
 
 EXE = $(BIN)/tp2virtual
 
-exec: $(BIN)/tp2virtual
-	./$(BIN)/tp2virtual
+exec: $(EXE)
+	./$(BIN)/tp2virtual lru arquivo.log 4 128
 
 $(BIN)/tp2virtual: $(OBJS)
 	$(CC) -o $(BIN)/tp2virtual $(OBJS) $(LIBS)
