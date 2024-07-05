@@ -3,8 +3,8 @@
 
 char* algoritmo;
 char* diretorio;
-int tamBloco;
-int tamProce;
+unsigned tamBloco;
+unsigned tamProce;
 
 void parse_args(int argc,char ** argv){
     if (argc < 4){
@@ -21,6 +21,16 @@ int main(int argc, char ** argv){
     parse_args(argc,argv);
     printf("Executando o simulador...\n");
 
+    unsigned s, tmp;
+
+    /* Derivar o valor de s: */
+    tmp = tamBloco;
+    s = 0;
+    while (tmp>1) {
+        tmp = tmp>>1;
+        s++;
+    }
+
     int pagLidas = 0, pagEscri = 0, totalAcesso = 0;
     FILE * arqEntrada;
 
@@ -28,15 +38,21 @@ int main(int argc, char ** argv){
     if (arqEntrada == NULL){
         printf("Erro: O arquivo de entrada não pode ser aberto.\n");
     }
+    
 
-    unsigned addr;
-    char rw;
+    unsigned addr = NULL, page = NULL;
+    char rw = NULL;
 
     while (!feof(arqEntrada))
     {
         fscanf(arqEntrada,"%x %c",&addr,&rw);
-        printf("%x %c\n", addr, rw);
-        totalAcesso++;
+        if(addr != NULL && rw != NULL){
+            printf("%x %c\n", addr, rw);
+            page = addr >> s;
+            totalAcesso++;
+        }
+        addr = NULL;
+        rw = NULL;
     }
 
     fclose(arqEntrada);	
