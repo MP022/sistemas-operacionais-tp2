@@ -12,13 +12,18 @@ void init_table(Table * table, unsigned num_pages, unsigned page_size)
 {
     table->pages = (Page *)malloc(num_pages * sizeof(Page*));
     table->frames = (unsigned *)malloc(num_pages * sizeof(unsigned));
+    for(int i = 0; i < num_pages; i++)
+    {
+        table->pages[i] = (Page *)malloc(sizeof(Page));
+        table->pages[i]->id = i;
+        table->frames[i] = i;
+    }
     table->size = num_pages;
     table->page_faults = 0;
 }
 
 int read(Table *table, unsigned addr, unsigned page)
 {
-
     if (page > table->size)
     {
         table->page_faults++;
@@ -37,14 +42,16 @@ int read(Table *table, unsigned addr, unsigned page)
 
 int write(Table * table, unsigned addr, unsigned page)
 {
-    unsigned offset = addr & 0x00000FFF;
+    if (page > table->size)
+    {
+        table->page_faults++;
+        return 0;
+    }
     for(int i = 0; i < table->size; i++)
     {
         if(table->pages[i]->id  == page)
         {
             table->pages[i]->last_access = current_time();
-            table->frames[i] = offset;
-
             return 1;
         }
     }
