@@ -1,13 +1,16 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "table.h"
-
+#include "util.h"
+#include "frame.h"
 char *algoritmo;
 char *diretorio;
 unsigned page_size;
 unsigned physical_mem_size;
 unsigned numPages;
 Table *table;
+
+Frame ** frames;
 
 void read_entry(int argc, char **argv)
 {
@@ -23,6 +26,7 @@ void read_entry(int argc, char **argv)
     numPages = physical_mem_size / page_size;
     table = (Table *)malloc(sizeof(Table));
     init_table(table, numPages, page_size);
+    frames = (Frame **)malloc(numPages * sizeof(Frame *));
 }
 
 int main(int argc, char **argv)
@@ -62,12 +66,12 @@ int main(int argc, char **argv)
             page = page_from_addr(addr,s);
             if (rw == 'W')
             {
-                read(table, addr, page);
+                read(table,frames, addr, page);
                 pagLidas++;
             }
             else
             {
-                write(table, addr, page);
+                write(table,frames, addr, page);
                 pagEscri++;
             }
         }
