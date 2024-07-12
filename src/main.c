@@ -2,13 +2,12 @@
 #include <stdlib.h>
 #include "table.h"
 
-
 char *algoritmo;
 char *diretorio;
 unsigned page_size;
 unsigned physical_mem_size;
 unsigned numPages;
-Table * table;
+Table *table;
 
 void read_entry(int argc, char **argv)
 {
@@ -22,9 +21,9 @@ void read_entry(int argc, char **argv)
     page_size = strtol(argv[3], NULL, 10) * 1024;
     physical_mem_size = strtol(argv[4], NULL, 10) * 1024;
     numPages = physical_mem_size / page_size;
-    // init_table(table, page_size, physical_mem_size);
+    table = (Table *)malloc(sizeof(Table));
+    init_table(table, numPages, page_size);
 }
-
 
 int main(int argc, char **argv)
 {
@@ -66,7 +65,6 @@ int main(int argc, char **argv)
                 seg_fault++;
                 continue;
             }
-            // table->pages[page].last_access = totalAcesso;
             if (rw == 'W')
                 pagEscri++;
             else
