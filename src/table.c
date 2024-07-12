@@ -1,4 +1,5 @@
 #include "table.h"
+#include <stdlib.h>
 
 void init_table(Table * table, unsigned page_size, unsigned physical_mem_size)
 {

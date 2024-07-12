@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-
+#include "table.h"
 
 
 char *algoritmo;
@@ -8,7 +8,9 @@ char *diretorio;
 unsigned page_size;
 unsigned physical_mem_size;
 unsigned numPages;
-void parse_args(int argc, char **argv)
+Table * table;
+
+void read_entry(int argc, char **argv)
 {
     if (argc < 4)
     {
@@ -19,20 +21,14 @@ void parse_args(int argc, char **argv)
     diretorio = argv[2];
     page_size = strtol(argv[3], NULL, 10) * 1024;
     physical_mem_size = strtol(argv[4], NULL, 10) * 1024;
-
     numPages = physical_mem_size / page_size;
-    pageTable.pages = (unsigned *)malloc(numPages * sizeof(unsigned));
-    pageTable.frames = (unsigned *)malloc(numPages * sizeof(unsigned));
+    // init_table(table, page_size, physical_mem_size);
 }
-/**
- * Estrutura de uma página
- * pages: endereço da página
- * frames: endereço do frame
- */
+
 
 int main(int argc, char **argv)
 {
-    parse_args(argc, argv);
+    read_entry(argc, argv);
     printf("Executando o simulador...\n");
     unsigned s, tmp;
 
@@ -70,7 +66,7 @@ int main(int argc, char **argv)
                 seg_fault++;
                 continue;
             }
-            pageTable.pages[page] = page;
+            // table->pages[page].last_access = totalAcesso;
             if (rw == 'W')
                 pagEscri++;
             else

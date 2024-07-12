@@ -9,7 +9,7 @@ typedef struct Table
     unsigned * frames;
 } Table;
 
-void init_table(const Table * table, unsigned page_size, unsigned physical_mem_size);
+void init_table(Table * table, unsigned page_size, unsigned physical_mem_size);
 
 
 #endif
