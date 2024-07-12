@@ -2,7 +2,6 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-
 /**
  * Inicializa a tabela de páginas.
  * @param table Tabela de páginas.
@@ -10,10 +9,10 @@
  * @param page_size Tamanho da página.
  */
 
-void init_table(Table * table, unsigned num_pages, unsigned page_size, char* policy)
+void init_table(Table *table, unsigned num_pages, unsigned page_size, char *policy)
 {
-    table->pages = (Page *)malloc(num_pages * sizeof(Page*));
-    for(int i = 0; i < num_pages; i++)
+    table->pages = (Page *)malloc(num_pages * sizeof(Page *));
+    for (int i = 0; i < num_pages; i++)
     {
         table->pages[i] = (Page *)malloc(sizeof(Page));
         table->pages[i]->id = i;
@@ -56,39 +55,39 @@ void process_address(Table *table, Frame **frames, unsigned addr, char *operatio
     }
 }
 
-int read(Table *table, Frame **frames, unsigned addr, unsigned page)
+int read(Table *table, Frame **frames, unsigned addr, unsigned pageIndex)
 {
-    if (page > table->size)
+    if (pageIndex > table->size)
     {
-        table->page_faults++;
+        // table->page_faults++;
         return 0;
     }
-    for(int i = 0; i < table->size; i++)
+    Page *actual_page = table->pages[pageIndex];
+    if (table->pages[pageIndex]->id == pageIndex)
     {
-        if(table->pages[i]->id  == page)
-        {
-            table->pages[i]->last_access = current_time();
-            return 1;
-        }
+        table->pages[pageIndex]->last_access = current_time();
+        return 1;
     }
     return 0;
 }
 
-int write(Table * table, Frame ** frames,unsigned addr, unsigned pageIndex)
+int write(Table *table, Frame **frames, unsigned addr, unsigned pageIndex)
 {
     if (pageIndex >= table->size)
     {
         // table->page_faults++;
         return 0;
     }
-    Page * actual_page = table->pages[pageIndex];
-    if(actual_page->valid == 1){
+    Page *actual_page = table->pages[pageIndex];
+    if (actual_page->valid == 1)
+    {
         actual_page->last_access = current_time();
         return 1;
     }
-    Frame * frame = get_free_frame(frames, table->pages, table->size);
+    Frame *frame = get_free_frame(frames, table->pages, table->size);
     table->page_faults++;
-    if(frame->page!=-1){
+    if (frame->page != -1)
+    {
         table->pages[frame->page]->frame = NULL;
         table->pages[frame->page]->valid = 0;
     }
@@ -98,6 +97,6 @@ int write(Table * table, Frame ** frames,unsigned addr, unsigned pageIndex)
     page->frame = frame;
     page->last_access = current_time();
     page->valid = 1;
-    
+
     return 0;
 }
