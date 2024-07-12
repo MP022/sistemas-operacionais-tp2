@@ -21,12 +21,14 @@ Frame *get_free_frame(Frame **frames, Page **pages, unsigned num_frames){
         }
         Page * page = pages[frames[i]->page];
         if(least_recently_used == NULL){
-            least_recently_used = frames[i];
+            printf("Last access: %ld\n", page->last_access);
+            least_recently_used = page;
             continue;
         }
         if(page->last_access < least_recently_used->last_access){
             least_recently_used = page;
         }
     }
+    printf("Last access: %ld\n", least_recently_used->last_access);
     return least_recently_used;
 }
