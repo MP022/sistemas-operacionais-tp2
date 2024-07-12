@@ -1,5 +1,5 @@
-#include "util.h"
-#include "table.h"
+#include "../include/util.h"
+#include "../include/table.h"
 
 time_t current_time()
 {

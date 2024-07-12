@@ -2,6 +2,7 @@
 #define PAGE_H
 
 #include "time.h"
+#include "frame.h"
 
 typedef struct Page
 {

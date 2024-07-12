@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "table.h"
+#include "../include/table.h"
 
 char *replacement_policy;
 char *diretorio;
