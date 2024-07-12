@@ -1,10 +1,14 @@
 #ifndef PAGE_H
 #define PAGE_H
 
+#include <time.h>
 
 typedef struct Page
 {
-    unsigned last_access;
+    unsigned valid;
+    unsigned id;
+    time_t last_access;
+
 } Page;
 
 #endif

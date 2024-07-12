@@ -59,16 +59,11 @@ int main(int argc, char **argv)
         if (addr != NULL && rw != NULL)
         {
             // printf("%x %c\n", addr, rw);
-            page = addr >> s;
-            if (page > numPages)
-            {
-                seg_fault++;
-                continue;
-            }
+            page = page_from_addr(addr,s);
             if (rw == 'W')
-                pagEscri++;
+                read(table, addr, page);
             else
-                pagLidas++;
+                write(table, addr, page);
         }
         totalAcesso++;
         addr = NULL;
