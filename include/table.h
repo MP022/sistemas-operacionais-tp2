@@ -9,7 +9,7 @@
 typedef struct Table
 {
     Page **pages;
-    int size;
+    long size;
     int page_faults;
     char *policy;
     unsigned shift;
@@ -17,10 +17,10 @@ typedef struct Table
     unsigned pages_write;
 } Table;
 
-void init_table(Table *table, unsigned num_pages, unsigned page_size, char * policy);
+void init_table(Table *table, long num_pages, unsigned page_size, char * policy);
 
-void process_address(Table *table, Frame **frames, unsigned addr, char *operation);
+void process_address(Table *table, Frame **frames, unsigned frame_amount, unsigned addr, char *operation);
 
-int read(Table * table,Frame ** frames, unsigned addr, unsigned page);
-int write(Table * table, Frame ** frames, unsigned addr, unsigned page);
+int read(Table *table, Frame **frames, unsigned frame_amount, unsigned addr, unsigned page);
+int write(Table *table, Frame **frames, unsigned frame_amount, unsigned addr, unsigned page);
 #endif

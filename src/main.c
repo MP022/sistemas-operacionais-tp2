@@ -6,10 +6,10 @@ char *replacement_policy;
 char *diretorio;
 unsigned page_size;
 unsigned physical_mem_size;
-unsigned numPages;
+unsigned numFrames;
 Table *table;
 Frame ** frames;
-
+unsigned long BITS_32 = 4294967296;
 void read_entry(int argc, char **argv)
 {
     if (argc < 4)
@@ -20,12 +20,15 @@ void read_entry(int argc, char **argv)
     replacement_policy = argv[1];
     diretorio = argv[2];
     page_size = strtol(argv[3], NULL, 10) * 1024;
-    physical_mem_size = strtol(argv[4], NULL, 10) * 1024;
-    numPages = physical_mem_size / page_size;
+    physical_mem_size = strtol(argv[4], NULL, 10) *1024;
+    numFrames = physical_mem_size / page_size;
+
+    long numPages = BITS_32 / page_size;
     table = (Table *)malloc(sizeof(Table));
+    printf("Bit %ld Num pages: %ld\n", BITS_32, numPages);
     init_table(table, numPages, page_size, replacement_policy);
-    frames = (Frame **)malloc(numPages * sizeof(Frame *));
-    for (int i = 0; i < numPages; i++)
+    frames = (Frame **)malloc(numFrames * sizeof(Frame *));
+    for (int i = 0; i < numFrames; i++)
     {
         frames[i] = (Frame *)malloc(sizeof(Frame));
         frames[i]->page = -1;
@@ -46,19 +49,20 @@ int main(int argc, char **argv)
         printf("Erro: O arquivo de entrada não pode ser aberto.\n");
     }
 
-    unsigned addr = NULL;
-    char  rw = NULL;
+    unsigned addr;
+    char  rw;
 
     int seg_fault = 0;
     while (!feof(arqEntrada))
     {
         fscanf(arqEntrada, "%x %c", &addr, &rw);
-        process_address(table, frames, addr, rw);
+        process_address(table, frames, numFrames, addr, rw);
         addr = NULL;
         rw = NULL;
     }
 
     fclose(arqEntrada);
+    printf("Quantidade de páginas: %d\n", table->size);
     printf("Page faults: %d\n", table->page_faults);
     printf("Arquivo de entrada: %s\n", diretorio);
     printf("Tamanho da memoria: %d KB\n", physical_mem_size);
