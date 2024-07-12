@@ -57,17 +57,18 @@ void process_address(Table *table, Frame **frames, unsigned addr, char *operatio
 
 int read(Table *table, Frame **frames, unsigned addr, unsigned pageIndex)
 {
-    if (pageIndex > table->size)
+    if (pageIndex >= table->size)
     {
         // table->page_faults++;
         return 0;
     }
     Page *actual_page = table->pages[pageIndex];
-    if (table->pages[pageIndex]->id == pageIndex)
-    {
+    if(actual_page-> valid == 1){
         table->pages[pageIndex]->last_access = current_time();
-        return 1;
+        table->pages_read++;
+        return;
     }
+    table->page_faults++;
     return 0;
 }
 
@@ -85,7 +86,6 @@ int write(Table *table, Frame **frames, unsigned addr, unsigned pageIndex)
         return 1;
     }
     Frame *frame = get_free_frame(frames, table->pages, table->size);
-    table->page_faults++;
     if (frame->page != -1)
     {
         table->pages[frame->page]->frame = NULL;
