@@ -2,13 +2,12 @@
 #include <stdlib.h>
 #include "table.h"
 
-char *algoritmo;
+char *replacement_policy;
 char *diretorio;
 unsigned page_size;
 unsigned physical_mem_size;
 unsigned numPages;
 Table *table;
-
 Frame ** frames;
 
 void read_entry(int argc, char **argv)
@@ -18,25 +17,29 @@ void read_entry(int argc, char **argv)
         printf("Erro: Menos argumentos passados do que o mínimo desejado.\n");
     }
 
-    algoritmo = argv[1];
+    replacement_policy = argv[1];
     diretorio = argv[2];
     page_size = strtol(argv[3], NULL, 10) * 1024;
     physical_mem_size = strtol(argv[4], NULL, 10) * 1024;
     numPages = physical_mem_size / page_size;
     table = (Table *)malloc(sizeof(Table));
-    init_table(table, numPages, page_size);
+    init_table(table, numPages, page_size, replacement_policy);
     frames = (Frame **)malloc(numPages * sizeof(Frame *));
+    for (int i = 0; i < numPages; i++)
+    {
+        frames[i] = (Frame *)malloc(sizeof(Frame));
+        frames[i]->page = NULL;
+    }
 }
 
 int main(int argc, char **argv)
 {
     read_entry(argc, argv);
     printf("Executando o simulador...\n");
-    unsigned s, tmp;
+    unsigned s=0, tmp;
 
     /* Derivar o valor de s: */
     tmp = page_size;
-    s = 0;
     while (tmp > 1)
     {
         tmp = tmp >> 1;
@@ -83,7 +86,7 @@ int main(int argc, char **argv)
     printf("Arquivo de entrada: %s\n", diretorio);
     printf("Tamanho da memoria: %d KB\n", physical_mem_size);
     printf("Tamanho das páginas: %d KB\n", page_size);
-    printf("Tecnica de reposição: %s\n", algoritmo);
+    printf("Tecnica de reposição: %s\n", replacement_policy);
     printf("Páginas lidas: %d\n", pagLidas);
     printf("Páginas escritas: %d\n", pagEscri);
     printf("Total de acessos: %d\n", totalAcesso);

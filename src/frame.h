@@ -3,6 +3,7 @@
 
 typedef struct Frame{
     unsigned value;
+    unsigned page;
 } Frame;
 
 #endif
