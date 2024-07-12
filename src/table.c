@@ -1,8 +1,6 @@
 #include "table.h"
 #include <stdlib.h>
 #include <stdio.h>
-#include "util.h"
-#include "frame.h"
 /**
  * Inicializa a tabela de páginas.
  * @param table Tabela de páginas.

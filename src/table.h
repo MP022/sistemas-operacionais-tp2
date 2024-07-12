@@ -2,8 +2,8 @@
 #define TABLE_H
 
 #include "frame.h"
-#include "frame.h"
 #include "page.h"
+#include "util.h"
 
 typedef struct Table
 {
