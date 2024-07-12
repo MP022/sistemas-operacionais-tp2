@@ -28,7 +28,7 @@ void read_entry(int argc, char **argv)
     for (int i = 0; i < numPages; i++)
     {
         frames[i] = (Frame *)malloc(sizeof(Frame));
-        frames[i]->page = NULL;
+        frames[i]->page = -1;
     }
 }
 
@@ -36,17 +36,8 @@ int main(int argc, char **argv)
 {
     read_entry(argc, argv);
     printf("Executando o simulador...\n");
-    unsigned s=0, tmp;
+   
 
-    /* Derivar o valor de s: */
-    tmp = page_size;
-    while (tmp > 1)
-    {
-        tmp = tmp >> 1;
-        s++;
-    }
-
-    int pagLidas = 0, pagEscri = 0, totalAcesso = 0;
     FILE *arqEntrada;
 
     arqEntrada = fopen(diretorio, "r");
@@ -55,40 +46,26 @@ int main(int argc, char **argv)
         printf("Erro: O arquivo de entrada não pode ser aberto.\n");
     }
 
-    unsigned addr = NULL,page = NULL;
+    unsigned addr = NULL;
     char  rw = NULL;
 
     int seg_fault = 0;
     while (!feof(arqEntrada))
     {
         fscanf(arqEntrada, "%x %c", &addr, &rw);
-        if (addr != NULL && rw != NULL)
-        {
-            totalAcesso++;
-            page = page_from_addr(addr,s);
-            if (rw == 'W')
-            {
-                read(table,frames, addr, page);
-                pagLidas++;
-            }
-            else
-            {
-                write(table,frames, addr, page);
-                pagEscri++;
-            }
-        }
+        process_address(table, frames, addr, rw);
         addr = NULL;
         rw = NULL;
     }
 
     fclose(arqEntrada);
-
+    printf("Page faults: %d\n", table->page_faults);
     printf("Arquivo de entrada: %s\n", diretorio);
     printf("Tamanho da memoria: %d KB\n", physical_mem_size);
     printf("Tamanho das páginas: %d KB\n", page_size);
     printf("Tecnica de reposição: %s\n", replacement_policy);
-    printf("Páginas lidas: %d\n", pagLidas);
-    printf("Páginas escritas: %d\n", pagEscri);
-    printf("Total de acessos: %d\n", totalAcesso);
+    printf("Páginas lidas: %d\n", table->pages_read);
+    printf("Páginas escritas: %d\n", table->pages_write);
+    printf("Total de acessos: %d\n", table->pages_write+ table->pages_read);
     return 0;
 }

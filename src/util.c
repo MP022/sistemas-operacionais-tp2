@@ -16,7 +16,7 @@ Frame *get_free_frame(Frame **frames, Page **pages, unsigned num_frames){
 
     for (int i = 0; i < num_frames; i++)
     {
-        if(frames[i]->page == NULL){
+        if(frames[i]->page == -1){
             return frames[i];
         }
         Page * page = pages[frames[i]->page];
@@ -24,7 +24,7 @@ Frame *get_free_frame(Frame **frames, Page **pages, unsigned num_frames){
             least_recently_used = frames[i];
             continue;
         }
-        if(page->last_access > least_recently_used->last_access){
+        if(page->last_access < least_recently_used->last_access){
             least_recently_used = page;
         }
     }
