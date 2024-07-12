@@ -58,14 +58,19 @@ int main(int argc, char **argv)
         fscanf(arqEntrada, "%x %c", &addr, &rw);
         if (addr != NULL && rw != NULL)
         {
-            // printf("%x %c\n", addr, rw);
+            totalAcesso++;
             page = page_from_addr(addr,s);
             if (rw == 'W')
+            {
                 read(table, addr, page);
+                pagLidas++;
+            }
             else
+            {
                 write(table, addr, page);
+                pagEscri++;
+            }
         }
-        totalAcesso++;
         addr = NULL;
         rw = NULL;
     }
