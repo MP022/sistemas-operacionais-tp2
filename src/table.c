@@ -23,7 +23,7 @@ void init_table(Table * table, unsigned num_pages, unsigned page_size)
     table->page_faults = 0;
 }
 
-int read(Table *table, unsigned addr, unsigned page)
+int read(Table *table, Frame **frames, unsigned addr, unsigned page)
 {
     if (page > table->size)
     {
@@ -41,24 +41,24 @@ int read(Table *table, unsigned addr, unsigned page)
     return 0;
 }
 
-int write(Table * table, unsigned addr, unsigned pageIndex)
+int write(Table * table, Frame ** frame,unsigned addr, unsigned pageIndex)
 {
     if (pageIndex > table->size)
     {
         table->page_faults++;
         return 0;
     }
-    Frame * frame = get_free_frame();
+    // Frame * frame = get_free_frame(frame, table->size);
     
-    if(frame-> page!=NULL){
-        table->pages[frame->page->id]->frame = NULL;
-        table->pages[frame->page->id]->valid = 0;
-    }
+    // if(frame-> page!=NULL){
+    //     table->pages[frame->page->id]->frame = NULL;
+    //     table->pages[frame->page->id]->valid = 0;
+    // }
 
-    Page *page = table->pages[pageIndex];
-    frame->page = page;
-    page->frame = frame;
-    page->valid = 1;
+    // Page *page = table->pages[pageIndex];
+    // frame->page = page;
+    // page->frame = frame;
+    // page->valid = 1;
     
     return 0;
 }

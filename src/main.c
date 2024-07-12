@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include "table.h"
 #include "util.h"
-#include "frame.h"
+
 char *algoritmo;
 char *diretorio;
 unsigned page_size;
@@ -53,8 +53,8 @@ int main(int argc, char **argv)
         printf("Erro: O arquivo de entrada não pode ser aberto.\n");
     }
 
-    unsigned addr = NULL, page = NULL;
-    char rw = NULL;
+    unsigned addr = NULL,page = NULL;
+    char  rw = NULL;
 
     int seg_fault = 0;
     while (!feof(arqEntrada))

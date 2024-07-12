@@ -4,7 +4,7 @@ SRC = src
 OBJ = obj
 INC = include
 BIN = bin
-OBJS = $(OBJ)/main.o $(OBJ)/page.o $(OBJ)/table.o ${OBJ}/frame.o ${OBJ}/util.o ${OBJ}/lru.o ${OBJ}/random.o
+OBJS = $(OBJ)/main.o $(OBJ)/page.o ${OBJ}/frame.o $(OBJ)/table.o  ${OBJ}/util.o ${OBJ}/lru.o ${OBJ}/random.o
 HDRS = 
 CFLAGS = -pg -Wall -c -I$(INC)
 
