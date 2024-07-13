@@ -42,8 +42,12 @@ void read_entry(int argc, char **argv)
     {
         frames[i] = (Frame *)malloc(sizeof(Frame));
         frames[i]->page = -1;
+<<<<<<< HEAD
         framesMultilevel[i] = (Frame *)malloc(sizeof(Frame));
         framesMultilevel[i]->page = -1;
+=======
+        frames[i]->allocated_time = -1;
+>>>>>>> 36a48f0 (fifo impl)
     }
 }
 

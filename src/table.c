@@ -48,7 +48,7 @@ void process_address(Table *table, Frame **frames, unsigned frames_amount, unsig
 
     if (operation == 'W')
     {
-        read(table, frames, frames_amount,addr, page);
+        read(table, frames, frames_amount, addr, page);
         table->pages_read++;
     }
     else
@@ -57,11 +57,13 @@ void process_address(Table *table, Frame **frames, unsigned frames_amount, unsig
         table->pages_write++;
     }
 }
-ReplacementPolicty select_policy(char * policy){
-    if(string_equals(policy,"lru")){
+ReplacementPolicty select_policy(char *policy)
+{
+    if (string_equals(policy, "lru"))
+    {
         return LRU;
     }
-    if(string_equals(policy,"fifo"))
+    if (string_equals(policy, "fifo"))
         return FIFO;
 
     printf("Invalid policy passed, %s", policy);
@@ -69,9 +71,10 @@ ReplacementPolicty select_policy(char * policy){
 }
 int read(Table *table, Frame **frames, unsigned frames_amount, unsigned addr, unsigned pageIndex)
 {
-  
+
     Page *actual_page = table->pages[pageIndex];
-    if(actual_page-> valid == 1){
+    if (actual_page->valid == 1)
+    {
         table->pages[pageIndex]->last_access = current_time();
         table->pages_read++;
         return;
@@ -82,7 +85,7 @@ int read(Table *table, Frame **frames, unsigned frames_amount, unsigned addr, un
 
 int write(Table *table, Frame **frames, unsigned frames_amount, unsigned addr, unsigned pageIndex)
 {
-    
+
     Page *actual_page = table->pages[pageIndex];
     if (actual_page->valid == 1)
     {
@@ -100,6 +103,7 @@ int write(Table *table, Frame **frames, unsigned frames_amount, unsigned addr, u
     Page *page = table->pages[pageIndex];
     frame->page = pageIndex;
     page->frame = frame;
+    frame->allocated_time = current_time();
     page->last_access = current_time();
     page->valid = 1;
     return 0;
@@ -110,34 +114,32 @@ Frame *get_free_frame(Frame **frames, Table *table)
     Page **pages = table->pages;
     unsigned num_frames = table->frames_amount;
     Page *least_recently_used = NULL;
-
+    Frame *oldest_allocated = NULL;
     Frame *frame = NULL;
     for (int i = 0; i < num_frames - 1; i++)
     {
         if (frames[i]->page == -1)
         {
-            frame = frames[i];
-            break;
+            return frames[i];
         }
         Page *page = pages[frames[i]->page];
-        if (least_recently_used == NULL)
+        if (least_recently_used==NULL|| least_recently_used->last_access > page->last_access)
         {
             least_recently_used = page;
-            continue;
         }
-        if (page->last_access < least_recently_used->last_access)
+        if (oldest_allocated==NULL|| oldest_allocated->allocated_time > frames[i]->allocated_time)
         {
-            least_recently_used = page;
+            oldest_allocated = frames[i];
         }
     }
-    if (frame == NULL&& table->policy ==LRU)
+    return frames[0];
+    switch (table->policy)
     {
-        frame = least_recently_used->frame;
+    case LRU:
+        return least_recently_used->frame;
+    case FIFO:
+        return oldest_allocated;
+    default:
+        return NULL;
     }
-    frame->allocated_time = current_time();
-    return frame;
-}
-
-Frame *fifo(Frame **frames, Page **page, unsigned num_frames)
-{
 }
