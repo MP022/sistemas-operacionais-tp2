@@ -10,7 +10,6 @@ typedef struct Page
     unsigned id;
     time_t last_access;
     Frame * frame;
-
 } Page;
 
 #endif
