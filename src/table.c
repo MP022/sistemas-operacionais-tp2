@@ -19,13 +19,13 @@ void init_table(Table *table, long num_pages, unsigned page_size, char *policy)
         table->pages[i]->last_access = 0;
     }
     table->size = num_pages;
-    table->policy = policy;
     table->page_faults = 0;
     table->shift = 0;
     table->pages_read = 0;
     table->pages_write = 0;
+    table->policy = select_policy(policy);
 
-        unsigned shift = 0;
+    unsigned shift = 0;
 
     /* Derivar o valor de s: */
     while (page_size > 1)
@@ -55,7 +55,15 @@ void process_address(Table *table, Frame **frames, unsigned frames_amount, unsig
         table->pages_write++;
     }
 }
+ReplacementPolicty select_policy(char * policy){
+    if(string_equals(policy,"lru"))
+        return LRU;
+    if(string_equals(policy,"fifo"))
+        return FIFO;
 
+    printf("Invalid policy passed, %s", policy);
+    exit(1);
+}
 int read(Table *table, Frame **frames, unsigned frames_amount, unsigned addr, unsigned pageIndex)
 {
   

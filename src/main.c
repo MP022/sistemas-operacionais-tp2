@@ -68,6 +68,7 @@ int main(int argc, char **argv)
         fscanf(arqEntrada, "%x %c", &addr, &rw);
         process_address(table, frames, numFrames, addr, rw);
         process_address_multinivel(tableMultilevel, framesMultilevel, numFrames, addr, rw);
+        process_address(table, frames, numFrames, addr, rw);    
         addr = NULL;
         rw = NULL;
     }

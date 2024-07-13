@@ -5,17 +5,25 @@
 #include "page.h"
 #include "util.h"
 
+typedef enum ReplacementPolicty
+{
+    FIFO,
+    SECOND_CHANCE,
+    LRU,
+} ReplacementPolicty;
 
 typedef struct Table
 {
     Page **pages;
     long size;
     int page_faults;
-    char *policy;
     unsigned shift;
     unsigned pages_read;
     unsigned pages_write;
+    ReplacementPolicty policy;
 } Table;
+
+ReplacementPolicty select_policy(char * policy);
 
 void init_table(Table *table, long num_pages, unsigned page_size, char * policy);
 
