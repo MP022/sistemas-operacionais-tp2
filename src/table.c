@@ -28,7 +28,6 @@ void init_table(Table *table, long num_pages, unsigned page_size, char *policy)
         unsigned shift = 0;
 
     /* Derivar o valor de s: */
-    printf("Page size: %d\n", page_size);
     while (page_size > 1)
     {
         page_size = page_size >> 1;

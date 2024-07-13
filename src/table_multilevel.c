@@ -12,11 +12,10 @@
 */
 void init_table_multinivel(TableMultilevel *table, long num_tables, long num_pages, unsigned page_size, char *policy)
 {
-    printf("Executando o simulador...\n");
     table->tables = (Table *)malloc(num_tables * sizeof(Table *));
-    printf("Executando o simulador...\n");
     for (int j = 0; j < num_tables; j++)
     {
+        table->tables[j] = (Table *)malloc(sizeof(Table));
         init_table(table->tables[j], num_pages, page_size, policy);
     }
     table->size = num_tables;
