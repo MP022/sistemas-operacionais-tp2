@@ -25,6 +25,7 @@ void init_table(Table *table, long num_pages, unsigned page_size, unsigned frame
     table->pages_read = 0;
     table->pages_write = 0;
     table->policy = select_policy(policy);
+    printf("policy: %d\n", table->policy);
 
     unsigned shift = 0;
 
@@ -57,8 +58,9 @@ void process_address(Table *table, Frame **frames, unsigned frames_amount, unsig
     }
 }
 ReplacementPolicty select_policy(char * policy){
-    if(string_equals(policy,"lru"))
+    if(string_equals(policy,"lru")){
         return LRU;
+    }
     if(string_equals(policy,"fifo"))
         return FIFO;
 
@@ -128,7 +130,7 @@ Frame *get_free_frame(Frame **frames, Table *table)
             least_recently_used = page;
         }
     }
-    if (frame == NULL)
+    if (frame == NULL&& table->policy ==LRU)
     {
         frame = least_recently_used->frame;
     }

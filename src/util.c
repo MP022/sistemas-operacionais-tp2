@@ -8,5 +8,5 @@ time_t current_time()
 }
 
 int string_equals(char *a, char * b){
-    return strcmp(a,b)!=0;
+    return strcmp(a,b)==0;
 }
