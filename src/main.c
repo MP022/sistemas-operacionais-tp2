@@ -23,11 +23,11 @@ void read_entry(int argc, char **argv)
     physical_mem_size = strtol(argv[4], NULL, 10) *1024;
     numFrames = physical_mem_size / page_size;
 
-    long numPages = BITS_32 / page_size;
     table = (Table *)malloc(sizeof(Table));
-    printf("Bit %ld Num pages: %ld\n", BITS_32, numPages);
+    long numPages = BITS_32 / page_size;
     init_table(table, numPages, page_size, replacement_policy);
     frames = (Frame **)malloc(numFrames * sizeof(Frame *));
+    
     for (int i = 0; i < numFrames; i++)
     {
         frames[i] = (Frame *)malloc(sizeof(Frame));

@@ -79,6 +79,7 @@ int write(Table *table, Frame **frames, unsigned frames_amount, unsigned addr, u
         actual_page->last_access = current_time();
         return 1;
     }
+    table->page_faults++;
     Frame *frame = get_free_frame(frames, table->pages, frames_amount);
     if (frame->page != -1)
     {
