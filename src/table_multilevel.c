@@ -53,6 +53,7 @@ void process_address_multinivel(TableMultilevel *tables, Frame **frames, unsigne
     }
     unsigned table = addr >> tables->shift_table;
 
+    int aux_page_faults = tables->tables[table]->page_faults;
     process_address(tables->tables[table], frames, frame_amount, table, operation);
     if (operation == 'W')
     {
@@ -63,5 +64,5 @@ void process_address_multinivel(TableMultilevel *tables, Frame **frames, unsigne
         tables->pages_write++;
     }
 
-    // tables->page_faults += aux_page_faults - tables->tables[table]->page_faults;
+    tables->page_faults += tables->tables[table]->page_faults - aux_page_faults;
 }

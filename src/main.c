@@ -62,6 +62,7 @@ int main(int argc, char **argv)
     while (!feof(arqEntrada))
     {
         fscanf(arqEntrada, "%x %c", &addr, &rw);
+        // process_address(table, frames, numFrames, addr, rw);
         process_address_multinivel(tableMultilevel, frames, numFrames, addr, rw);
         addr = NULL;
         rw = NULL;
