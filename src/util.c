@@ -32,9 +32,15 @@ Frame *get_free_frame(Frame **frames, Page **pages, unsigned num_frames){
         }
     }
     if(frame == NULL){
+        printf("NULL\n");
         frame = least_recently_used->frame;
     }
+    if(frame == NULL){
+        printf("NULL\n");
+    }
+    printf("COMECOU\n");
     frame->allocated_time = current_time();
+    printf("ACABOU\n");
     return frame;
 }
 
