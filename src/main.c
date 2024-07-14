@@ -12,6 +12,7 @@ unsigned numFrames;
 Table *table;
 TableMultilevel *tableMultilevel;
 Frame ** frames;
+Frame ** framesMultilevel;
 unsigned long BITS_32 = 4294967296;
 void read_entry(int argc, char **argv)
 {
@@ -33,11 +34,14 @@ void read_entry(int argc, char **argv)
     init_table(table, numPages, page_size, replacement_policy);
     init_table_multinivel(tableMultilevel, sqrtl(numPages), sqrtl(numPages), page_size, replacement_policy);
     frames = (Frame **)malloc(numFrames * sizeof(Frame *));
+    framesMultilevel = (Frame **)malloc(numFrames * sizeof(Frame *));
     
     for (int i = 0; i < numFrames; i++)
     {
         frames[i] = (Frame *)malloc(sizeof(Frame));
         frames[i]->page = -1;
+        framesMultilevel[i] = (Frame *)malloc(sizeof(Frame));
+        framesMultilevel[i]->page = -1;
     }
 }
 
@@ -62,8 +66,8 @@ int main(int argc, char **argv)
     while (!feof(arqEntrada))
     {
         fscanf(arqEntrada, "%x %c", &addr, &rw);
-        // process_address(table, frames, numFrames, addr, rw);
-        process_address_multinivel(tableMultilevel, frames, numFrames, addr, rw);
+        process_address(table, frames, numFrames, addr, rw);
+        process_address_multinivel(tableMultilevel, framesMultilevel, numFrames, addr, rw);
         addr = NULL;
         rw = NULL;
     }
