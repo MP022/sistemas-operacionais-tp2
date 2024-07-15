@@ -56,7 +56,7 @@ void process_address(Table *table, Frame **frames, unsigned frames_amount, unsig
     else
     {
         write(table, frames, frames_amount, addr, page);
-        table->pages_write++;l
+        table->pages_write++;
     }
 }
 ReplacementPolicty select_policy(char *policy)

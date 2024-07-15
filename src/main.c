@@ -31,7 +31,7 @@ void read_entry(int argc, char **argv)
     table = (Table *)malloc(sizeof(Table));
     tableMultilevel = (TableMultilevel *)malloc(sizeof(TableMultilevel));
     printf("Bit %ld Num pages: %ld\n", BITS_32, numPages);
-    init_table(table, numPages, page_size, replacement_policy);
+    init_table(table, numPages, numFrames,page_size, replacement_policy);
     init_table_multinivel(tableMultilevel, sqrtl(numPages), sqrtl(numPages), page_size, replacement_policy);
     long numPages = BITS_32 / page_size;
     init_table(table, numPages, page_size,numFrames, replacement_policy);
@@ -42,12 +42,8 @@ void read_entry(int argc, char **argv)
     {
         frames[i] = (Frame *)malloc(sizeof(Frame));
         frames[i]->page = -1;
-<<<<<<< HEAD
         framesMultilevel[i] = (Frame *)malloc(sizeof(Frame));
         framesMultilevel[i]->page = -1;
-=======
-        frames[i]->allocated_time = -1;
->>>>>>> 36a48f0 (fifo impl)
     }
 }
 
