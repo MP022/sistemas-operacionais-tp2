@@ -28,13 +28,10 @@ void read_entry(int argc, char **argv)
     numFrames = physical_mem_size / page_size;
 
     long numPages = BITS_32 / page_size;
-    table = (Table *)malloc(sizeof(Table));
+    table = (Table **)malloc(sizeof(Table));
     tableMultilevel = (TableMultilevel *)malloc(sizeof(TableMultilevel));
-    printf("Bit %ld Num pages: %ld\n", BITS_32, numPages);
-    init_table(table, numPages, numFrames,page_size, replacement_policy);
+    init_table(table, numPages, page_size, numFrames, replacement_policy);
     init_table_multinivel(tableMultilevel, sqrtl(numPages), sqrtl(numPages), page_size, replacement_policy);
-    long numPages = BITS_32 / page_size;
-    init_table(table, numPages, page_size,numFrames, replacement_policy);
     frames = (Frame **)malloc(numFrames * sizeof(Frame *));
     framesMultilevel = (Frame **)malloc(numFrames * sizeof(Frame *));
     

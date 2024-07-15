@@ -16,7 +16,8 @@ void init_table_multinivel(TableMultilevel *table, long num_tables, long num_pag
     for (int j = 0; j < num_tables; j++)
     {
         table->tables[j] = (Table *)malloc(sizeof(Table));
-        init_table(table->tables[j], num_pages, page_size, policy);
+        // TODO Passar a quantidade de frames
+        init_table(table->tables[j], num_pages, page_size, 0, policy);
     }
     table->size = num_tables;
     table->policy = policy;

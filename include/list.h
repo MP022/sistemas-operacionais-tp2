@@ -4,7 +4,7 @@
 #include "page.h"
 typedef struct PageNode{
     Page * page;
-    PageNode * next;
+    struct PageNode * next;
 }PageNode;
 
 typedef struct List{

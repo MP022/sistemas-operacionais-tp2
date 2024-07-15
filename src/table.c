@@ -27,7 +27,6 @@ void init_table(Table *table, long num_pages, unsigned page_size, unsigned frame
     table->pages_write = 0;
     table->second_chance_list = (List*)malloc(sizeof(List));
     table->policy = select_policy(policy);
-    printf("policy: %d\n", table->policy);
 
     unsigned shift = 0;
 
@@ -96,7 +95,10 @@ int write(Table *table, Frame **frames, unsigned frames_amount, unsigned addr, u
         return 1;
     }
     table->page_faults++;
+    printf("Page %d\n", pageIndex);	
     Frame *frame = get_free_frame(frames, table);
+    printf("Page %d\n", pageIndex);
+    printf("Frame %d\n", frame->page);
     if (frame->page != -1)
     {
         table->pages[frame->page]->frame = NULL;
@@ -136,16 +138,17 @@ Frame *get_free_frame(Frame **frames, Table *table)
             oldest_allocated = frames[i];
         }
     }
-    return frames[0];
-    switch (table->policy)
-    {
+    switch (table->policy){
     case LRU:
         return least_recently_used->frame;
     case FIFO:
         return oldest_allocated;
     case SECOND_CHANCE:
+        printf("NÃO TEM NULL");
 
     default:
+        printf("NÃO TEM NULL");
+
         return NULL;
     }
 }
