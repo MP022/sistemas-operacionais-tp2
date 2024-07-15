@@ -17,6 +17,7 @@ void init_table(Table *table, long num_pages, unsigned page_size, unsigned frame
         table->pages[i] = (Page *)malloc(sizeof(Page));
         table->pages[i]->id = i;
         table->pages[i]->last_access = 0;
+        table->pages[i]->reference = 0;
     }
     table->size = num_pages;
     table->page_faults = 0;
@@ -24,6 +25,7 @@ void init_table(Table *table, long num_pages, unsigned page_size, unsigned frame
     table->frames_amount = frames_amount;
     table->pages_read = 0;
     table->pages_write = 0;
+    table->second_chance_list = (List*)malloc(sizeof(List));
     table->policy = select_policy(policy);
     printf("policy: %d\n", table->policy);
 
@@ -54,7 +56,7 @@ void process_address(Table *table, Frame **frames, unsigned frames_amount, unsig
     else
     {
         write(table, frames, frames_amount, addr, page);
-        table->pages_write++;
+        table->pages_write++;l
     }
 }
 ReplacementPolicty select_policy(char *policy)
@@ -76,6 +78,7 @@ int read(Table *table, Frame **frames, unsigned frames_amount, unsigned addr, un
     if (actual_page->valid == 1)
     {
         table->pages[pageIndex]->last_access = current_time();
+        table->pages[pageIndex]->reference = 1;
         table->pages_read++;
         return;
     }
@@ -106,6 +109,7 @@ int write(Table *table, Frame **frames, unsigned frames_amount, unsigned addr, u
     frame->allocated_time = current_time();
     page->last_access = current_time();
     page->valid = 1;
+    page->reference = 1;
     return 0;
 }
 
@@ -139,6 +143,8 @@ Frame *get_free_frame(Frame **frames, Table *table)
         return least_recently_used->frame;
     case FIFO:
         return oldest_allocated;
+    case SECOND_CHANCE:
+
     default:
         return NULL;
     }

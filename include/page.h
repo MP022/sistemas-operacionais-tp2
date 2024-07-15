@@ -9,6 +9,7 @@ typedef struct Page
 {
     unsigned valid;
     unsigned id;
+    unsigned reference;
     time_t last_access;
     Frame * frame;
 } Page;
