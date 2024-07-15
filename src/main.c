@@ -47,7 +47,7 @@ void read_entry(int argc, char **argv)
 int main(int argc, char **argv)
 {
     read_entry(argc, argv);
-    printf("Executando o simulador...\n");
+    printf("Executndo o simulador...\n");
    
 
     FILE *arqEntrada;
@@ -65,8 +65,9 @@ int main(int argc, char **argv)
     while (!feof(arqEntrada))
     {
         fscanf(arqEntrada, "%x %c", &addr, &rw);
-        // process_address(table, frames, numFrames, addr, rw);
-        process_address_multinivel(tableMultilevel, framesMultilevel, numFrames, addr, rw);
+        process_address(table, frames, numFrames, addr, rw);
+        table->interaction_counter++;
+        // process_address_multinivel(tableMultilevel, framesMultilevel, numFrames, addr, rw);
         addr = NULL;
         rw = NULL;
     }

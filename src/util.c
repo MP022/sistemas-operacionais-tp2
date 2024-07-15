@@ -2,9 +2,9 @@
 #include "../include/table.h"
 
 #include <string.h>
-time_t current_time()
+long current_time(Table *table)
 {
-    return time(0);
+    return table->interaction_counter;
 }
 
 int string_equals(char *a, char * b){

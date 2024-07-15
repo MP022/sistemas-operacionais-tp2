@@ -1,9 +1,8 @@
 #ifndef UTIL_H
 #define UTIL_H
 
-#include <time.h>
 #include "table.h"
-time_t current_time();
+long current_time();
 
 /**
  * Compare two strings an return if they are equal

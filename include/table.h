@@ -24,6 +24,7 @@ typedef struct Table
     unsigned pages_write;
     ReplacementPolicty policy;
     List * second_chance_list;
+    long interaction_counter;
 } Table;
 
 ReplacementPolicty select_policy(char * policy);

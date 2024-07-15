@@ -19,6 +19,7 @@ void init_table(Table *table, long num_pages, unsigned page_size, unsigned frame
         table->pages[i]->last_access = 0;
         table->pages[i]->reference = 0;
     }
+    table->interaction_counter = 0;
     table->size = num_pages;
     table->page_faults = 0;
     table->shift = 0;
@@ -76,9 +77,8 @@ int read(Table *table, Frame **frames, unsigned frames_amount, unsigned addr, un
     Page *actual_page = table->pages[pageIndex];
     if (actual_page->valid == 1)
     {
-        table->pages[pageIndex]->last_access = current_time();
+        table->pages[pageIndex]->last_access = current_time(table);
         table->pages[pageIndex]->reference = 1;
-        table->pages_read++;
         return;
     }
     table->page_faults++;
@@ -91,14 +91,10 @@ int write(Table *table, Frame **frames, unsigned frames_amount, unsigned addr, u
     Page *actual_page = table->pages[pageIndex];
     if (actual_page->valid == 1)
     {
-        actual_page->last_access = current_time();
+        actual_page->last_access = current_time(table);
         return 1;
     }
-    table->page_faults++;
-    printf("Page %d\n", pageIndex);	
     Frame *frame = get_free_frame(frames, table);
-    printf("Page %d\n", pageIndex);
-    printf("Frame %d\n", frame->page);
     if (frame->page != -1)
     {
         table->pages[frame->page]->frame = NULL;
@@ -108,8 +104,8 @@ int write(Table *table, Frame **frames, unsigned frames_amount, unsigned addr, u
     Page *page = table->pages[pageIndex];
     frame->page = pageIndex;
     page->frame = frame;
-    frame->allocated_time = current_time();
-    page->last_access = current_time();
+    frame->allocated_time = current_time(table);
+    page->last_access = current_time(table);
     page->valid = 1;
     page->reference = 1;
     return 0;
@@ -118,6 +114,7 @@ int write(Table *table, Frame **frames, unsigned frames_amount, unsigned addr, u
 Frame *get_free_frame(Frame **frames, Table *table)
 {
     Page **pages = table->pages;
+
     unsigned num_frames = table->frames_amount;
     Page *least_recently_used = NULL;
     Frame *oldest_allocated = NULL;
@@ -144,10 +141,8 @@ Frame *get_free_frame(Frame **frames, Table *table)
     case FIFO:
         return oldest_allocated;
     case SECOND_CHANCE:
-        printf("NÃO TEM NULL");
 
     default:
-        printf("NÃO TEM NULL");
 
         return NULL;
     }

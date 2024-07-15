@@ -6,7 +6,7 @@
 typedef struct Frame{
     unsigned value;
     unsigned page;
-    time_t allocated_time;
+    long allocated_time;
 } Frame;
 
 #endif
