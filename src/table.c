@@ -9,7 +9,7 @@
  * @param page_size Tamanho da página.
  */
 
-void init_table(Table *table, long num_pages, unsigned page_size, char *policy)
+void init_table(Table *table, long num_pages, unsigned page_size, unsigned frames_amount, char *policy)
 {
     table->pages = (Page *)malloc(num_pages * sizeof(Page *));
     for (int i = 0; i < num_pages; i++)
@@ -21,6 +21,7 @@ void init_table(Table *table, long num_pages, unsigned page_size, char *policy)
     table->size = num_pages;
     table->page_faults = 0;
     table->shift = 0;
+    table->frames_amount = frames_amount;
     table->pages_read = 0;
     table->pages_write = 0;
     table->policy = select_policy(policy);
@@ -87,7 +88,7 @@ int write(Table *table, Frame **frames, unsigned frames_amount, unsigned addr, u
         return 1;
     }
     table->page_faults++;
-    Frame *frame = get_free_frame(frames, table->pages, frames_amount);
+    Frame *frame = get_free_frame(frames, table);
     if (frame->page != -1)
     {
         table->pages[frame->page]->frame = NULL;
@@ -100,4 +101,41 @@ int write(Table *table, Frame **frames, unsigned frames_amount, unsigned addr, u
     page->last_access = current_time();
     page->valid = 1;
     return 0;
+}
+
+Frame *get_free_frame(Frame **frames, Table *table)
+{
+    Page **pages = table->pages;
+    unsigned num_frames = table->frames_amount;
+    Page *least_recently_used = NULL;
+
+    Frame *frame = NULL;
+    for (int i = 0; i < num_frames - 1; i++)
+    {
+        if (frames[i]->page == -1)
+        {
+            frame = frames[i];
+            break;
+        }
+        Page *page = pages[frames[i]->page];
+        if (least_recently_used == NULL)
+        {
+            least_recently_used = page;
+            continue;
+        }
+        if (page->last_access < least_recently_used->last_access)
+        {
+            least_recently_used = page;
+        }
+    }
+    if (frame == NULL)
+    {
+        frame = least_recently_used->frame;
+    }
+    frame->allocated_time = current_time();
+    return frame;
+}
+
+Frame *fifo(Frame **frames, Page **page, unsigned num_frames)
+{
 }

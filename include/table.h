@@ -19,16 +19,19 @@ typedef struct Table
     int page_faults;
     unsigned shift;
     unsigned pages_read;
+    unsigned frames_amount;
     unsigned pages_write;
     ReplacementPolicty policy;
 } Table;
 
 ReplacementPolicty select_policy(char * policy);
 
-void init_table(Table *table, long num_pages, unsigned page_size, char * policy);
+void init_table(Table *table, long num_pages, unsigned page_size, unsigned frames_amount, char *policy);
 
 void process_address(Table *table, Frame **frames, unsigned frame_amount, unsigned addr, char *operation);
 
 int read(Table *table, Frame **frames, unsigned frame_amount, unsigned addr, unsigned page);
 int write(Table *table, Frame **frames, unsigned frame_amount, unsigned addr, unsigned page);
+Frame *get_free_frame(Frame **frames, Table * table);
+
 #endif
