@@ -31,7 +31,7 @@ void read_entry(int argc, char **argv)
     table = (Table **)malloc(sizeof(Table));
     tableMultilevel = (TableMultilevel *)malloc(sizeof(TableMultilevel));
     init_table(table, numPages, page_size, numFrames, replacement_policy);
-    init_table_multinivel(tableMultilevel, sqrtl(numPages), sqrtl(numPages), page_size, replacement_policy);
+    init_table_multinivel(tableMultilevel, sqrtl(numPages), numFrames, page_size, replacement_policy);
     frames = (Frame **)malloc(numFrames * sizeof(Frame *));
     framesMultilevel = (Frame **)malloc(numFrames * sizeof(Frame *));
     
@@ -65,9 +65,8 @@ int main(int argc, char **argv)
     while (!feof(arqEntrada))
     {
         fscanf(arqEntrada, "%x %c", &addr, &rw);
-        process_address(table, frames, numFrames, addr, rw);
+        // process_address(table, frames, numFrames, addr, rw);
         process_address_multinivel(tableMultilevel, framesMultilevel, numFrames, addr, rw);
-        process_address(table, frames, numFrames, addr, rw);    
         addr = NULL;
         rw = NULL;
     }

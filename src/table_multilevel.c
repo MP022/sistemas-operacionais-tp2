@@ -10,14 +10,13 @@
 * @param num_pages Número de páginas.
 * @param page_size Tamanho da página.
 */
-void init_table_multinivel(TableMultilevel *table, long num_tables, long num_pages, unsigned page_size, char *policy)
+void init_table_multinivel(TableMultilevel *table, long num_tables, long frames_amount, unsigned page_size, char *policy)
 {
     table->tables = (Table *)malloc(num_tables * sizeof(Table *));
     for (int j = 0; j < num_tables; j++)
     {
         table->tables[j] = (Table *)malloc(sizeof(Table));
-        // TODO Passar a quantidade de frames
-        init_table(table->tables[j], num_pages, page_size, 0, policy);
+        init_table(table->tables[j], num_tables, page_size, frames_amount, policy);
     }
     table->size = num_tables;
     table->policy = policy;
@@ -28,7 +27,7 @@ void init_table_multinivel(TableMultilevel *table, long num_tables, long num_pag
     table->pages_write = 0;
 
     unsigned shift = 0;
-    long sizeShift = num_pages * page_size;
+    long sizeShift = num_tables * page_size;
     while (sizeShift > 1)
     {
         sizeShift = sizeShift >> 1;
@@ -37,9 +36,10 @@ void init_table_multinivel(TableMultilevel *table, long num_tables, long num_pag
     table->shift_table = shift;
 
     shift = 0;
-    while (num_pages > 1)
+    sizeShift = num_tables;
+    while (sizeShift > 1)
     {
-        num_pages = num_pages >> 1;
+        sizeShift = sizeShift >> 1;
         shift++;
     }
     table->shift_addrs = shift;
@@ -53,9 +53,13 @@ void process_address_multinivel(TableMultilevel *tables, Frame **frames, unsigne
         return;
     }
     unsigned table = addr >> tables->shift_table;
+    unsigned newAddr = addr << tables->shift_addrs;
+    newAddr = newAddr >> tables->shift_addrs;
+
+    // printf("%x\n%x %x\n", addr, table, newAddr);
 
     int aux_page_faults = tables->tables[table]->page_faults;
-    process_address(tables->tables[table], frames, frame_amount, table, operation);
+    process_address(tables->tables[table], frames, frame_amount, newAddr, operation);
     if (operation == 'W')
     {
         tables->pages_read++;
