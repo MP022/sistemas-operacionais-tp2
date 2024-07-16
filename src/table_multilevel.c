@@ -46,7 +46,7 @@ void init_table_multinivel(TableMultilevel *table, long num_tables, long frames_
 
 }
 
-void process_address_multinivel(TableMultilevel *tables, Frame **frames, unsigned frame_amount, unsigned addr, char operation)
+void process_address_multinivel(TableMultilevel *tables, Frame **frames, unsigned addr, char operation)
 {
     if (addr == -1 || operation == '\0')
     {

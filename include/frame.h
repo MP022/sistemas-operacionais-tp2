@@ -6,7 +6,6 @@
 
 typedef struct Frame{
     unsigned id;
-    unsigned value;
     Page* page;
     short reference;
     long allocated_time;

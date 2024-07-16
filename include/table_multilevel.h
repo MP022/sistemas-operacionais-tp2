@@ -20,6 +20,6 @@ typedef struct TableMultilevel
 
 void init_table_multinivel(TableMultilevel *table, long num_tables, long num_pages, unsigned page_size, char * policy);
 
-void process_address_multinivel(TableMultilevel *table, Frame **frames, unsigned frame_amount, unsigned addr, char operation);
+void process_address_multinivel(TableMultilevel *table, Frame **frames, unsigned addr, char operation);
 
 #endif
