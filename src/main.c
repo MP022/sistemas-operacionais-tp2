@@ -98,6 +98,7 @@ int main(int argc, char **argv)
         process_address(table, frames, addr, rw);
         process_address_multinivel2(tableMultilevel2, framesMultilevel2, addr, rw);
         // process_address_multinivel3(tableMultilevel3, framesMultilevel3, addr, rw);
+        process_address_inverted(tableInverted, framesInverted, addr, rw);
         table->interaction_counter++;
         addr = -1;
         rw = '\0';
@@ -134,5 +135,12 @@ int main(int argc, char **argv)
     printf("Páginas lidas: %d\n", tableMultilevel3->pages_read);
     printf("Páginas escritas: %d\n", tableMultilevel3->pages_write);
     printf("Total de acessos: %d\n", tableMultilevel3->pages_write + tableMultilevel3->pages_read);
+
+    printf("\nRelatório: Tabela Invertida\n");
+    printf("Quantidade de páginas: %ld\n", tableInverted->frames_amount);
+    printf("Page faults: %d\n", tableInverted->page_faults);
+    printf("Páginas lidas: %d\n", tableInverted->pages_read);
+    printf("Páginas escritas: %d\n", tableInverted->pages_write);
+    printf("Total de acessos: %d\n", tableInverted->pages_write + tableInverted->pages_read);
     return 0;
 }

@@ -52,17 +52,17 @@ void process_address_inverted(TableInverted *table, Frame **frames, unsigned add
 
     if (operation == 'W')
     {
-        read(table, frames, pageId);
+        read_inverted(table, frames, pageId);
         table->pages_read++;
     }
     else
     {
-        write(table, frames, pageId);
+        write_inverted(table, frames, pageId);
         table->pages_write++;
     }
 }
 
-int read(TableInverted *table, Frame **frames, unsigned pageId)
+int read_inverted(TableInverted *table, Frame **frames, unsigned pageId)
 {
     Frame *frame = get_page_frame(frames, table, pageId);
     if (table->pages[frame->id]->valid == 1)
@@ -75,7 +75,7 @@ int read(TableInverted *table, Frame **frames, unsigned pageId)
     return 0;
 }
 
-int write(TableInverted *table, Frame **frames, unsigned pageId)
+int write_inverted(TableInverted *table, Frame **frames, unsigned pageId)
 {
     Frame *frame = get_page_frame(frames, table, pageId);
     if (table->pages[frame->id]->valid == 1)
@@ -93,19 +93,6 @@ int write(TableInverted *table, Frame **frames, unsigned pageId)
     table->pages[frame->id]->last_access = current_time(table);
     table->pages[frame->id]->valid = 1;
     return 0;
-}
-
-ReplacementPolicty select_policy(char *policy)
-{
-    if (string_equals(policy, "lru"))
-    {
-        return LRU;
-    }
-    if (string_equals(policy, "fifo"))
-        return FIFO;
-
-    printf("Invalid policy passed, %s", policy);
-    exit(1);
 }
 
 Frame *get_page_frame(Frame **frames, TableInverted *table, unsigned pageId)
