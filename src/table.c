@@ -133,6 +133,7 @@ Frame *get_free_frame(Frame **frames, Table *table)
             oldest_allocated = frame;
         }
       
+      
     }
     switch (table->policy){
     case LRU:
@@ -140,7 +141,15 @@ Frame *get_free_frame(Frame **frames, Table *table)
     case FIFO:
         return oldest_allocated;
     case SECOND_CHANCE:
-
+        for(int i = 0; i < num_frames; i++){
+            Frame *frame = frames[i];
+            if(frame->reference == 0){
+                return frame;
+            }
+            frame->reference = 0;
+        }
+    case RANDOM:
+        return frames[rand() % num_frames];
     default:
 
         return NULL;
