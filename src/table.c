@@ -17,7 +17,6 @@ void init_table(Table *table, long num_pages, unsigned page_size, unsigned frame
         table->pages[i] = (Page *)malloc(sizeof(Page));
         table->pages[i]->id = i;
         table->pages[i]->last_access = 0;
-        table->pages[i]->reference = 0;
     }
     table->interaction_counter = 0;
     table->size = num_pages;
@@ -104,10 +103,10 @@ int write(Table *table, Frame **frames, unsigned frames_amount, unsigned addr, u
     Page *page = table->pages[pageIndex];
     frame->page = pageIndex;
     page->frame = frame;
+    frame->reference = 1;
     frame->allocated_time = current_time(table);
     page->last_access = current_time(table);
     page->valid = 1;
-    page->reference = 1;
     return 0;
 }
 
@@ -118,21 +117,28 @@ Frame *get_free_frame(Frame **frames, Table *table)
     unsigned num_frames = table->frames_amount;
     Page *least_recently_used = NULL;
     Frame *oldest_allocated = NULL;
-    Frame *frame = NULL;
     for (int i = 0; i < num_frames - 1; i++)
     {
-        if (frames[i]->page == -1)
+        Frame * frame = frames[i];
+        if (frame->page == -1)
         {
-            return frames[i];
+            return frame;
         }
-        Page *page = pages[frames[i]->page];
+        Page *page = pages[frame->page];
         if (least_recently_used==NULL|| least_recently_used->last_access > page->last_access)
         {
             least_recently_used = page;
         }
-        if (oldest_allocated==NULL|| oldest_allocated->allocated_time > frames[i]->allocated_time)
+        if (oldest_allocated==NULL|| oldest_allocated->allocated_time > frame->allocated_time)
         {
-            oldest_allocated = frames[i];
+            oldest_allocated = frame;
+        }
+        if(SECOND_CHANCE){
+        if(frame->reference == 0){
+            return frame;
+        }else{
+            frame->reference = 0;
+        }
         }
     }
     switch (table->policy){

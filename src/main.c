@@ -39,8 +39,9 @@ void read_entry(int argc, char **argv)
     {
         frames[i] = (Frame *)malloc(sizeof(Frame));
         frames[i]->page = -1;
+        frames[i]->reference = 0;
         framesMultilevel[i] = (Frame *)malloc(sizeof(Frame));
-        framesMultilevel[i]->page = -1;
+        framesMultilevel[i]->page = -1
     }
 }
 
