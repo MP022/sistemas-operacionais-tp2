@@ -12,7 +12,7 @@
 */
 void init_table_multinivel(TableMultilevel *table, long num_tables, long frames_amount, unsigned page_size, char *policy)
 {
-    table->tables = (Table *)malloc(num_tables * sizeof(Table *));
+    table->tables = (Table **)malloc(num_tables * sizeof(Table *));
     for (int j = 0; j < num_tables; j++)
     {
         table->tables[j] = (Table *)malloc(sizeof(Table));
@@ -46,9 +46,9 @@ void init_table_multinivel(TableMultilevel *table, long num_tables, long frames_
 
 }
 
-void process_address_multinivel(TableMultilevel *tables, Frame **frames, unsigned frame_amount, unsigned addr, char *operation)
+void process_address_multinivel(TableMultilevel *tables, Frame **frames, unsigned frame_amount, unsigned addr, char operation)
 {
-    if (addr == NULL || operation == NULL)
+    if (addr == -1 || operation == '\0')
     {
         return;
     }
@@ -59,7 +59,7 @@ void process_address_multinivel(TableMultilevel *tables, Frame **frames, unsigne
     // printf("%x\n%x %x\n", addr, table, newAddr);
 
     int aux_page_faults = tables->tables[table]->page_faults;
-    process_address(tables->tables[table], frames, frame_amount, newAddr, operation);
+    process_address(tables->tables[table], frames, newAddr, operation);
     if (operation == 'W')
     {
         tables->pages_read++;

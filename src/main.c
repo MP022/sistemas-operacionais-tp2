@@ -28,7 +28,7 @@ void read_entry(int argc, char **argv)
     numFrames = physical_mem_size / page_size;
 
     long numPages = BITS_32 / page_size;
-    table = (Table **)malloc(sizeof(Table));
+    table = (Table *)malloc(sizeof(Table));
     tableMultilevel = (TableMultilevel *)malloc(sizeof(TableMultilevel));
     init_table(table, numPages, page_size, numFrames, replacement_policy);
     init_table_multinivel(tableMultilevel, sqrtl(numPages), numFrames, page_size, replacement_policy);
@@ -38,9 +38,11 @@ void read_entry(int argc, char **argv)
     for (int i = 0; i < numFrames; i++)
     {
         frames[i] = (Frame *)malloc(sizeof(Frame));
-        frames[i]->page = -1;
+        frames[i]->page = NULL;
+        frames[i]->id = i;
         framesMultilevel[i] = (Frame *)malloc(sizeof(Frame));
-        framesMultilevel[i]->page = -1;
+        framesMultilevel[i]->page = NULL;
+        framesMultilevel[i]->id = i;
     }
 }
 
@@ -58,22 +60,21 @@ int main(int argc, char **argv)
         printf("Erro: O arquivo de entrada não pode ser aberto.\n");
     }
 
-    unsigned addr;
-    char  rw;
+    unsigned addr = -1;
+    char rw = '\0';
 
-    int seg_fault = 0;
     while (!feof(arqEntrada))
     {
         fscanf(arqEntrada, "%x %c", &addr, &rw);
-        process_address(table, frames, numFrames, addr, rw);
+        process_address(table, frames, addr, rw);
+        // process_address_multinivel(tableMultilevel, framesMultilevel, addr, rw);
         table->interaction_counter++;
-        // process_address_multinivel(tableMultilevel, framesMultilevel, numFrames, addr, rw);
-        addr = NULL;
-        rw = NULL;
+        addr = -1;
+        rw = '\0';
     }
 
     fclose(arqEntrada);
-    printf("Quantidade de páginas: %d\n", table->size);
+    printf("Quantidade de páginas: %ld\n", table->size);
     printf("Page faults: %d\n", table->page_faults);
     printf("Arquivo de entrada: %s\n", diretorio);
     printf("Tamanho da memoria: %d KB\n", physical_mem_size);

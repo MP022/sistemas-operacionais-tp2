@@ -2,10 +2,12 @@
 #define FRAME_H
 
 #include <time.h>
+#include "page.h"
 
 typedef struct Frame{
+    unsigned id;
     unsigned value;
-    unsigned page;
+    Page* page;
     long allocated_time;
 } Frame;
 
