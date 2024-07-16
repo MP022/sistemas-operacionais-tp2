@@ -16,6 +16,7 @@ typedef struct TableMultilevel2
     unsigned shift_table;
     unsigned pages_read;
     unsigned pages_write;
+    long interaction_counter;
 } TableMultilevel2;
 
 void init_table_multinivel2(TableMultilevel2 *table, long num_tables, long frames_amount, unsigned page_size, char * policy);

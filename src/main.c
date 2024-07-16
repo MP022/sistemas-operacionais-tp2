@@ -100,6 +100,9 @@ int main(int argc, char **argv)
         // process_address_multinivel3(tableMultilevel3, framesMultilevel3, addr, rw);
         process_address_inverted(tableInverted, framesInverted, addr, rw);
         table->interaction_counter++;
+        tableMultilevel2->interaction_counter++;
+        tableMultilevel3->interaction_counter++;
+        tableInverted->interaction_counter++;
         addr = -1;
         rw = '\0';
     }

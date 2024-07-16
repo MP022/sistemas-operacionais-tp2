@@ -16,6 +16,7 @@ typedef struct TableInverted
     unsigned frames_amount;
     unsigned pages_write;
     ReplacementPolicty policy;
+    long interaction_counter;
 } TableInverted;
 
 void init_table_inverted(TableInverted *table, long frames_amount, unsigned page_size, char * policy);
