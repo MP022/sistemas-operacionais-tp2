@@ -142,6 +142,7 @@ Frame *get_free_frame(Frame **frames, Table *table)
     case FIFO:
         return oldest_allocated;
     case SECOND_CHANCE:
+
     default:
 
         return NULL;
