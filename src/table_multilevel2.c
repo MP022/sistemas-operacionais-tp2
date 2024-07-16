@@ -1,4 +1,4 @@
-#include "../include/table_multilevel.h"
+#include "../include/table_multilevel2.h"
 #include <stdlib.h>
 #include <stdio.h>
 
@@ -7,10 +7,10 @@
 * Inicializa a tabela de páginas.
 * @param table Tabela de páginas.
 * @param num_tables Número de tabelas.
-* @param num_pages Número de páginas.
+* @param frames_amount Número de frames.
 * @param page_size Tamanho da página.
 */
-void init_table_multinivel(TableMultilevel *table, long num_tables, long frames_amount, unsigned page_size, char *policy)
+void init_table_multinivel2(TableMultilevel2 *table, long num_tables, long frames_amount, unsigned page_size, char *policy)
 {
     table->tables = (Table **)malloc(num_tables * sizeof(Table *));
     for (int j = 0; j < num_tables; j++)
@@ -46,7 +46,7 @@ void init_table_multinivel(TableMultilevel *table, long num_tables, long frames_
 
 }
 
-void process_address_multinivel(TableMultilevel *tables, Frame **frames, unsigned addr, char operation)
+void process_address_multinivel2(TableMultilevel2 *tables, Frame **frames, unsigned addr, char operation)
 {
     if (addr == -1 || operation == '\0')
     {

@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <math.h>
 #include "../include/table.h"
-#include "../include/table_multilevel.h"
+#include "../include/table_multilevel2.h"
 
 char *replacement_policy;
 char *diretorio;
@@ -10,9 +10,9 @@ unsigned page_size;
 unsigned physical_mem_size;
 unsigned numFrames;
 Table *table;
-TableMultilevel *tableMultilevel;
+TableMultilevel2 *tableMultilevel2;
 Frame ** frames;
-Frame ** framesMultilevel;
+Frame ** framesMultilevel2;
 unsigned long BITS_32 = 4294967296;
 void read_entry(int argc, char **argv)
 {
@@ -29,11 +29,11 @@ void read_entry(int argc, char **argv)
 
     long numPages = BITS_32 / page_size;
     table = (Table *)malloc(sizeof(Table));
-    tableMultilevel = (TableMultilevel *)malloc(sizeof(TableMultilevel));
+    tableMultilevel2 = (TableMultilevel2 *)malloc(sizeof(TableMultilevel2));
     init_table(table, numPages, page_size, numFrames, replacement_policy);
-    init_table_multinivel(tableMultilevel, sqrtl(numPages), numFrames, page_size, replacement_policy);
+    init_table_multinivel2(tableMultilevel2, sqrtl(numPages), numFrames, page_size, replacement_policy);
     frames = (Frame **)malloc(numFrames * sizeof(Frame *));
-    framesMultilevel = (Frame **)malloc(numFrames * sizeof(Frame *));
+    framesMultilevel2 = (Frame **)malloc(numFrames * sizeof(Frame *));
     
     for (int i = 0; i < numFrames; i++)
     {
@@ -41,10 +41,11 @@ void read_entry(int argc, char **argv)
         frames[i]->page = NULL;
         frames[i]->id = i;
         frames[i]->reference = 0;
-        framesMultilevel[i] = (Frame *)malloc(sizeof(Frame));
-        framesMultilevel[i]->page = NULL;
-        framesMultilevel[i]->id = i;
-        framesMultilevel[i]->reference = 0;
+
+        framesMultilevel2[i] = (Frame *)malloc(sizeof(Frame));
+        framesMultilevel2[i]->page = NULL;
+        framesMultilevel2[i]->id = i;
+        framesMultilevel2[i]->reference = 0;
     }
     if(table->policy == RANDOM){
         srand(time(NULL));
@@ -73,7 +74,7 @@ int main(int argc, char **argv)
     {
         fscanf(arqEntrada, "%x %c", &addr, &rw);
         process_address(table, frames, addr, rw);
-        process_address_multinivel(tableMultilevel, framesMultilevel, addr, rw);
+        process_address_multinivel2(tableMultilevel2, framesMultilevel2, addr, rw);
         table->interaction_counter++;
         addr = -1;
         rw = '\0';
@@ -92,13 +93,13 @@ int main(int argc, char **argv)
     printf("Page faults: %d\n", table->page_faults);
     printf("Páginas lidas: %d\n", table->pages_read);
     printf("Páginas escritas: %d\n", table->pages_write);
-    printf("Total de acessos: %d\n", table->pages_write+ table->pages_read);
+    printf("Total de acessos: %d\n", table->pages_write + table->pages_read);
 
     printf("\nRelatório: Tabela Hierárquica de 2 níveis\n");
-    printf("Quantidade de páginas: %ld\n", tableMultilevel->size);
-    printf("Page faults: %d\n", tableMultilevel->page_faults);
-    printf("Páginas lidas: %d\n", tableMultilevel->pages_read);
-    printf("Páginas escritas: %d\n", tableMultilevel->pages_write);
-    printf("Total de acessos: %d\n", tableMultilevel->pages_write+ tableMultilevel->pages_read);
+    printf("Quantidade de páginas: %ld\n", tableMultilevel2->size);
+    printf("Page faults: %d\n", tableMultilevel2->page_faults);
+    printf("Páginas lidas: %d\n", tableMultilevel2->pages_read);
+    printf("Páginas escritas: %d\n", tableMultilevel2->pages_write);
+    printf("Total de acessos: %d\n", tableMultilevel2->pages_write + tableMultilevel2->pages_read);
     return 0;
 }
