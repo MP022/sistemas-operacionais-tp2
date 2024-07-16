@@ -98,12 +98,10 @@ int write(Table *table, Frame **frames, unsigned pageIndex)
 
     frame->page = actual_page;
     actual_page->frame = frame->id;
-    Page *page = table->pages[pageIndex];
     frame->reference = 1;
-    page->frame = frame->id;
     frame->allocated_time = current_time(table);
-    page->last_access = current_time(table);
-    page->valid = 1;
+    actual_page->last_access = current_time(table);
+    actual_page->valid = 1;
     return 0;
 }
 

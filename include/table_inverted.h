@@ -22,4 +22,8 @@ void init_table_inverted(TableInverted *table, long frames_amount, unsigned page
 
 void process_address_inverted(TableInverted *table, Frame **frames, unsigned addr, char operation);
 
+int read(Table *table, Frame **frames, unsigned page);
+int write(Table *table, Frame **frames, unsigned page);
+Frame *get_page_frame(Frame **frames, Table * table, unsigned pageIndex);
+
 #endif
