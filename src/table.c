@@ -12,7 +12,7 @@
 
 void init_table(Table *table, long num_pages, unsigned page_size, unsigned frames_amount, char *policy)
 {
-    table->pages = (Page *)malloc(num_pages * sizeof(Page *));
+    table->pages = (Page **)malloc(num_pages * sizeof(Page *));
     for (int i = 0; i < num_pages; i++)
     {
         table->pages[i] = (Page *)malloc(sizeof(Page));
@@ -38,9 +38,9 @@ void init_table(Table *table, long num_pages, unsigned page_size, unsigned frame
     table->shift = shift;
 }
 
-void process_address(Table *table, Frame **frames, unsigned frames_amount, unsigned addr, char *operation)
+void process_address(Table *table, Frame **frames, unsigned addr, char operation)
 {
-    if (addr == NULL || operation == NULL)
+    if (addr == -1 || operation == '\0')
     {
         return;
     }
@@ -48,12 +48,12 @@ void process_address(Table *table, Frame **frames, unsigned frames_amount, unsig
 
     if (operation == 'W')
     {
-        read(table, frames, frames_amount, addr, page);
+        read(table, frames, page);
         table->pages_read++;
     }
     else
     {
-        write(table, frames, frames_amount, addr, page);
+        write(table, frames, page);
         table->pages_write++;
     }
 }
@@ -69,7 +69,8 @@ ReplacementPolicty select_policy(char *policy)
     printf("Invalid policy passed, %s", policy);
     exit(1);
 }
-int read(Table *table, Frame **frames, unsigned frames_amount, unsigned addr, unsigned pageIndex)
+
+int read(Table *table, Frame **frames, unsigned pageIndex)
 {
 
     Page *actual_page = table->pages[pageIndex];
@@ -77,13 +78,13 @@ int read(Table *table, Frame **frames, unsigned frames_amount, unsigned addr, un
     {
         table->pages[pageIndex]->last_access = current_time(table);
         table->pages[pageIndex]->reference = 1;
-        return;
+        return 1;
     }
     table->page_faults++;
     return 0;
 }
 
-int write(Table *table, Frame **frames, unsigned frames_amount, unsigned addr, unsigned pageIndex)
+int write(Table *table, Frame **frames, unsigned pageIndex)
 {
 
     Page *actual_page = table->pages[pageIndex];
@@ -93,12 +94,14 @@ int write(Table *table, Frame **frames, unsigned frames_amount, unsigned addr, u
         return 1;
     }
     Frame *frame = get_free_frame(frames, table);
-    if (frame->page != -1)
+    if (frame->page != NULL)
     {
-        table->pages[frame->page]->frame = NULL;
-        table->pages[frame->page]->valid = 0;
+        frame->page->frame = -1;
+        frame->page->valid = 0;
     }
 
+    frame->page = actual_page;
+    actual_page->frame = frame->id;
     Page *page = table->pages[pageIndex];
     frame->page = pageIndex;
     page->frame = frame;
@@ -111,8 +114,6 @@ int write(Table *table, Frame **frames, unsigned frames_amount, unsigned addr, u
 
 Frame *get_free_frame(Frame **frames, Table *table)
 {
-    Page **pages = table->pages;
-
     unsigned num_frames = table->frames_amount;
     Page *least_recently_used = NULL;
     Frame *oldest_allocated = NULL;
@@ -137,7 +138,7 @@ Frame *get_free_frame(Frame **frames, Table *table)
     }
     switch (table->policy){
     case LRU:
-        return least_recently_used->frame;
+        return frames[least_recently_used->frame];
     case FIFO:
         return oldest_allocated;
     case SECOND_CHANCE:

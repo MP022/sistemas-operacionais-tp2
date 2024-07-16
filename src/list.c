@@ -1,4 +1,4 @@
-#include "list.h";
+#include "../include/list.h"
 #include <stdlib.h>
 
 void init_list(List *list){
@@ -8,7 +8,7 @@ void init_list(List *list){
 }
 
 void insert_node(List * list,Page *page){
-    PageNode * node = (Page *)malloc(sizeof(PageNode));
+    PageNode * node = (PageNode *)malloc(sizeof(PageNode));
     node->page = page;
     list->size++;
     if(list->head == NULL){
@@ -33,4 +33,5 @@ PageNode * remove_unreferenced(List *list){
     if(current!=NULL){
         return current;
     }
-};
+    return NULL;
+}

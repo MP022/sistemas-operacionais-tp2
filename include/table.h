@@ -32,10 +32,10 @@ ReplacementPolicty select_policy(char * policy);
 
 void init_table(Table *table, long num_pages, unsigned page_size, unsigned frames_amount, char *policy);
 
-void process_address(Table *table, Frame **frames, unsigned frame_amount, unsigned addr, char *operation);
+void process_address(Table *table, Frame **frames, unsigned addr, char operation);
 
-int read(Table *table, Frame **frames, unsigned frame_amount, unsigned addr, unsigned page);
-int write(Table *table, Frame **frames, unsigned frame_amount, unsigned addr, unsigned page);
+int read(Table *table, Frame **frames, unsigned page);
+int write(Table *table, Frame **frames, unsigned page);
 Frame *get_free_frame(Frame **frames, Table * table);
 
 #endif
