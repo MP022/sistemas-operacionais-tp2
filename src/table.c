@@ -40,8 +40,6 @@ void process_address(Table *table, Frame **frames, unsigned addr, char operation
     }
     unsigned page = addr >> table->shift;
 
-    // printf("%x\n%d: %x\n", addr, table->shift, page);
-
     if (operation == 'W')
     {
         read(table, frames, page);

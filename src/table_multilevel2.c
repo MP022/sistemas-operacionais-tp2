@@ -47,8 +47,6 @@ void process_address_multinivel2(TableMultilevel2 *table, Frame **frames, unsign
     unsigned newAddr = addr << table->shift_addrs;
     newAddr = newAddr >> table->shift_addrs;
 
-    // printf("%x\n%d: %x %d: %x\n", addr, table->shift_table, tableIndex, table->shift_addrs, newAddr);
-
     int aux_page_faults = table->tables[tableIndex]->page_faults;
     process_address(table->tables[tableIndex], frames, newAddr, operation);
     if (operation == 'W')

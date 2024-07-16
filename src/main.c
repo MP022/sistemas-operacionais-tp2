@@ -144,6 +144,6 @@ int main(int argc, char **argv)
     printf("Page faults: %d\n", tableInverted->page_faults);
     printf("Páginas lidas: %d\n", tableInverted->pages_read);
     printf("Páginas escritas: %d\n", tableInverted->pages_write);
-    printf("Total de acessos: %d\n", tableInverted->pages_write + tableInverted->pages_read);
+    printf("Total de acessos: %d\n\n", tableInverted->pages_write + tableInverted->pages_read);
     return 0;
 }
