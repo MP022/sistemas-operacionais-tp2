@@ -4,7 +4,7 @@ SRC = src
 OBJ = obj
 INC = include
 BIN = bin
-OBJS = $(OBJ)/main.o $(OBJ)/page.o ${OBJ}/frame.o $(OBJ)/table.o $(OBJ)/table_multilevel.o ${OBJ}/util.o ${OBJ}/list.o
+OBJS = $(OBJ)/main.o $(OBJ)/page.o ${OBJ}/frame.o $(OBJ)/table.o $(OBJ)/table_multilevel.o ${OBJ}/util.o
 HDRS = 
 CFLAGS = -pg -Wall -c -I$(INC)
 
@@ -34,7 +34,5 @@ $(OBJ)/frame.o: $(HDRS) $(SRC)/frame.c
 $(OBJ)/util.o: $(HDRS) $(SRC)/util.c
 	$(CC) $(CFLAGS) -o $(OBJ)/util.o $(SRC)/util.c
 
-$(OBJ)/list.o: $(HDRS) $(SRC)/list.c
-	$(CC) $(CFLAGS) -o $(OBJ)/list.o $(SRC)/list.c
 clean:
 	rm -f $(EXE) $(OBJS)

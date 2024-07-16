@@ -40,11 +40,11 @@ void read_entry(int argc, char **argv)
         frames[i] = (Frame *)malloc(sizeof(Frame));
         frames[i]->page = NULL;
         frames[i]->id = i;
-        frames[i]->page = -1;
         frames[i]->reference = 0;
         framesMultilevel[i] = (Frame *)malloc(sizeof(Frame));
         framesMultilevel[i]->page = NULL;
         framesMultilevel[i]->id = i;
+        framesMultilevel[i]->reference = 0;
     }
     if(table->policy == RANDOM){
         srand(time(NULL));

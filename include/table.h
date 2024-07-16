@@ -4,7 +4,6 @@
 #include "frame.h"
 #include "page.h"
 #include "util.h"
-#include "list.h"
 
 typedef enum ReplacementPolicty
 {
@@ -24,7 +23,6 @@ typedef struct Table
     unsigned frames_amount;
     unsigned pages_write;
     ReplacementPolicty policy;
-    List * second_chance_list;
     long interaction_counter;
 } Table;
 

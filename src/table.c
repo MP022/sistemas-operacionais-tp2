@@ -26,7 +26,6 @@ void init_table(Table *table, long num_pages, unsigned page_size, unsigned frame
     table->frames_amount = frames_amount;
     table->pages_read = 0;
     table->pages_write = 0;
-    table->second_chance_list = (List*)malloc(sizeof(List));
     table->policy = select_policy(policy);
     unsigned shift = 0;
     /* Derivar o valor de s: */
@@ -77,7 +76,7 @@ int read(Table *table, Frame **frames, unsigned pageIndex)
     if (actual_page->valid == 1)
     {
         table->pages[pageIndex]->last_access = current_time(table);
-        table->pages[pageIndex]->reference = 1;
+        frames[actual_page->frame]->reference = 1;
         return 1;
     }
     table->page_faults++;
@@ -103,9 +102,8 @@ int write(Table *table, Frame **frames, unsigned pageIndex)
     frame->page = actual_page;
     actual_page->frame = frame->id;
     Page *page = table->pages[pageIndex];
-    frame->page = pageIndex;
-    page->frame = frame;
     frame->reference = 1;
+    page->frame = frame->id;
     frame->allocated_time = current_time(table);
     page->last_access = current_time(table);
     page->valid = 1;
@@ -120,11 +118,11 @@ Frame *get_free_frame(Frame **frames, Table *table)
     for (int i = 0; i < num_frames - 1; i++)
     {
         Frame * frame = frames[i];
-        if (frame->page == -1)
+        if (frame->page == NULL)
         {
             return frame;
         }
-        Page *page = pages[frame->page];
+        Page *page = frame->page;
         if (least_recently_used==NULL|| least_recently_used->last_access > page->last_access)
         {
             least_recently_used = page;
