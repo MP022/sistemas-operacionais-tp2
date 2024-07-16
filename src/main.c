@@ -41,8 +41,12 @@ void read_entry(int argc, char **argv)
         frames[i]->page = -1;
         frames[i]->reference = 0;
         framesMultilevel[i] = (Frame *)malloc(sizeof(Frame));
-        framesMultilevel[i]->page = -1
+        framesMultilevel[i]->page = -1;
     }
+    if(table->policy == RANDOM){
+        srand(time(NULL));
+    }
+
 }
 
 int main(int argc, char **argv)

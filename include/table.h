@@ -11,6 +11,7 @@ typedef enum ReplacementPolicty
     FIFO,
     SECOND_CHANCE,
     LRU,
+    RANDOM
 } ReplacementPolicty;
 
 typedef struct Table

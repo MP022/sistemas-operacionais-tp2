@@ -1,6 +1,7 @@
 #include "../include/table.h"
 #include <stdlib.h>
 #include <stdio.h>
+#include <time.h>
 
 /**
  * Inicializa a tabela de páginas.
@@ -27,9 +28,7 @@ void init_table(Table *table, long num_pages, unsigned page_size, unsigned frame
     table->pages_write = 0;
     table->second_chance_list = (List*)malloc(sizeof(List));
     table->policy = select_policy(policy);
-
     unsigned shift = 0;
-
     /* Derivar o valor de s: */
     while (page_size > 1)
     {
@@ -148,6 +147,8 @@ Frame *get_free_frame(Frame **frames, Table *table)
         return oldest_allocated;
     case SECOND_CHANCE:
 
+    case RANDOM:
+        return frames[rand() % num_frames];
     default:
 
         return NULL;
