@@ -11,13 +11,14 @@ typedef struct TableInverted
     Page **pages;
     int page_faults;
     unsigned shift;
+    unsigned shift_addr;
     unsigned pages_read;
     unsigned frames_amount;
     unsigned pages_write;
     ReplacementPolicty policy;
 } TableInverted;
 
-void init_table_inverted(TableInverted *table, long num_pages, unsigned page_size, char * policy);
+void init_table_inverted(TableInverted *table, long frames_amount, unsigned page_size, char * policy);
 
 void process_address_inverted(TableInverted *table, Frame **frames, unsigned addr, char operation);
 

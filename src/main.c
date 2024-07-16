@@ -4,6 +4,7 @@
 #include "../include/table.h"
 #include "../include/table_multilevel2.h"
 #include "../include/table_multilevel3.h"
+#include "../include/table_inverted.h"
 
 char *replacement_policy;
 char *diretorio;
@@ -13,9 +14,11 @@ unsigned numFrames;
 Table *table;
 TableMultilevel2 *tableMultilevel2;
 TableMultilevel3 *tableMultilevel3;
+TableInverted *tableInverted;
 Frame ** frames;
 Frame ** framesMultilevel2;
 Frame ** framesMultilevel3;
+Frame ** framesInverted;
 unsigned long BITS_32 = 4294967296;
 void read_entry(int argc, char **argv)
 {
@@ -29,17 +32,22 @@ void read_entry(int argc, char **argv)
     page_size = strtol(argv[3], NULL, 10) * 1024;
     physical_mem_size = strtol(argv[4], NULL, 10) *1024;
     numFrames = physical_mem_size / page_size;
-
     long numPages = BITS_32 / page_size;
+
     table = (Table *)malloc(sizeof(Table));
     tableMultilevel2 = (TableMultilevel2 *)malloc(sizeof(TableMultilevel2));
     tableMultilevel3 = (TableMultilevel3 *)malloc(sizeof(TableMultilevel3));
+    tableInverted = (TableInverted *)malloc(sizeof(TableInverted));
+
     init_table(table, numPages, numFrames, page_size, replacement_policy);
     init_table_multinivel2(tableMultilevel2, sqrtl(numPages), numFrames, page_size, replacement_policy);
     init_table_multinivel3(tableMultilevel3, sqrtl(numPages), numFrames, page_size, replacement_policy);
+    init_table_inverted(tableInverted, numFrames, page_size, replacement_policy);
+
     frames            = (Frame **)malloc(numFrames * sizeof(Frame *));
     framesMultilevel2 = (Frame **)malloc(numFrames * sizeof(Frame *));
     framesMultilevel3 = (Frame **)malloc(numFrames * sizeof(Frame *));
+    framesInverted    = (Frame **)malloc(numFrames * sizeof(Frame *));
     
     for (int i = 0; i < numFrames; i++)
     {
@@ -57,6 +65,11 @@ void read_entry(int argc, char **argv)
         framesMultilevel3[i]->page = NULL;
         framesMultilevel3[i]->id = i;
         framesMultilevel3[i]->reference = 0;
+
+        framesInverted[i] = (Frame *)malloc(sizeof(Frame));
+        framesInverted[i]->page = NULL;
+        framesInverted[i]->id = i;
+        framesInverted[i]->reference = 0;
     }
 
     if(table->policy == RANDOM){
