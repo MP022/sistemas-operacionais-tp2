@@ -55,7 +55,7 @@ void read_entry(int argc, char **argv)
 int main(int argc, char **argv)
 {
     read_entry(argc, argv);
-    printf("Executndo o simulador...\n");
+    printf("Executando o simulador...\n");
    
 
     FILE *arqEntrada;
@@ -73,21 +73,32 @@ int main(int argc, char **argv)
     {
         fscanf(arqEntrada, "%x %c", &addr, &rw);
         process_address(table, frames, addr, rw);
-        // process_address_multinivel(tableMultilevel, framesMultilevel, addr, rw);
+        process_address_multinivel(tableMultilevel, framesMultilevel, addr, rw);
         table->interaction_counter++;
         addr = -1;
         rw = '\0';
     }
 
     fclose(arqEntrada);
+
+    printf("Dados da execução\n");
+    printf("Arquivo de entrada: %s\n", diretorio);
+    printf("Tamanho da memoria: %d B\n", physical_mem_size);
+    printf("Tamanho das páginas: %d B\n", page_size);
+    printf("Tecnica de reposição: %s\n", replacement_policy);
+
+    printf("\nRelátorio: Tabela Densa\n");
     printf("Quantidade de páginas: %ld\n", table->size);
     printf("Page faults: %d\n", table->page_faults);
-    printf("Arquivo de entrada: %s\n", diretorio);
-    printf("Tamanho da memoria: %d KB\n", physical_mem_size);
-    printf("Tamanho das páginas: %d KB\n", page_size);
-    printf("Tecnica de reposição: %s\n", replacement_policy);
     printf("Páginas lidas: %d\n", table->pages_read);
     printf("Páginas escritas: %d\n", table->pages_write);
     printf("Total de acessos: %d\n", table->pages_write+ table->pages_read);
+
+    printf("\nRelátorio: Tabela Hierárquica de 2 níveis\n");
+    printf("Quantidade de páginas: %ld\n", tableMultilevel->size);
+    printf("Page faults: %d\n", tableMultilevel->page_faults);
+    printf("Páginas lidas: %d\n", tableMultilevel->pages_read);
+    printf("Páginas escritas: %d\n", tableMultilevel->pages_write);
+    printf("Total de acessos: %d\n", tableMultilevel->pages_write+ tableMultilevel->pages_read);
     return 0;
 }
