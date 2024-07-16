@@ -87,14 +87,14 @@ int main(int argc, char **argv)
     printf("Tamanho das páginas: %d B\n", page_size);
     printf("Tecnica de reposição: %s\n", replacement_policy);
 
-    printf("\nRelátorio: Tabela Densa\n");
+    printf("\nRelatório: Tabela Densa\n");
     printf("Quantidade de páginas: %ld\n", table->size);
     printf("Page faults: %d\n", table->page_faults);
     printf("Páginas lidas: %d\n", table->pages_read);
     printf("Páginas escritas: %d\n", table->pages_write);
     printf("Total de acessos: %d\n", table->pages_write+ table->pages_read);
 
-    printf("\nRelátorio: Tabela Hierárquica de 2 níveis\n");
+    printf("\nRelatório: Tabela Hierárquica de 2 níveis\n");
     printf("Quantidade de páginas: %ld\n", tableMultilevel->size);
     printf("Page faults: %d\n", tableMultilevel->page_faults);
     printf("Páginas lidas: %d\n", tableMultilevel->pages_read);
