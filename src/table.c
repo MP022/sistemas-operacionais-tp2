@@ -3,20 +3,15 @@
 #include <stdio.h>
 #include <time.h>
 
-/**
- * Inicializa a tabela de páginas.
- * @param table Tabela de páginas.
- * @param num_pages Número de páginas.
- * @param page_size Tamanho da página.
- */
 
-void init_table(Table *table, long num_pages, unsigned page_size, unsigned frames_amount, char *policy)
+void init_table(Table *table, long num_pages, unsigned frames_amount, unsigned page_size, char *policy)
 {
     table->pages = (Page **)malloc(num_pages * sizeof(Page *));
     for (int i = 0; i < num_pages; i++)
     {
         table->pages[i] = (Page *)malloc(sizeof(Page));
         table->pages[i]->id = i;
+        table->pages[i]->valid = 0;
         table->pages[i]->last_access = 0;
     }
     table->interaction_counter = 0;
@@ -45,6 +40,8 @@ void process_address(Table *table, Frame **frames, unsigned addr, char operation
     }
     unsigned page = addr >> table->shift;
 
+    // printf("%x\n%d: %x\n", addr, table->shift, page);
+
     if (operation == 'W')
     {
         read(table, frames, page);
@@ -56,6 +53,7 @@ void process_address(Table *table, Frame **frames, unsigned addr, char operation
         table->pages_write++;
     }
 }
+
 ReplacementPolicty select_policy(char *policy)
 {
     if (string_equals(policy, "lru"))
@@ -71,11 +69,10 @@ ReplacementPolicty select_policy(char *policy)
 
 int read(Table *table, Frame **frames, unsigned pageIndex)
 {
-
     Page *actual_page = table->pages[pageIndex];
     if (actual_page->valid == 1)
     {
-        table->pages[pageIndex]->last_access = current_time(table);
+        actual_page->last_access = current_time(table);
         frames[actual_page->frame]->reference = 1;
         return 1;
     }

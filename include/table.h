@@ -28,7 +28,7 @@ typedef struct Table
 
 ReplacementPolicty select_policy(char * policy);
 
-void init_table(Table *table, long num_pages, unsigned page_size, unsigned frames_amount, char *policy);
+void init_table(Table *table, long num_pages, unsigned frames_amount, unsigned page_size, char *policy);
 
 void process_address(Table *table, Frame **frames, unsigned addr, char operation);
 

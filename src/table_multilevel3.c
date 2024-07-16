@@ -1,15 +1,16 @@
-#include "../include/table_multilevel2.h"
+#include "../include/table_multilevel3.h"
 #include <stdlib.h>
 #include <stdio.h>
+#include <math.h>
 
 
-void init_table_multinivel2(TableMultilevel2 *table, long num_tables, long frames_amount, unsigned page_size, char *policy)
+void init_table_multinivel3(TableMultilevel3 *table, long num_tables, long frames_amount, unsigned page_size, char *policy)
 {
-    table->tables = (Table **)malloc(num_tables * sizeof(Table *));
+    table->tables = (TableMultilevel2 **)malloc(num_tables * sizeof(TableMultilevel2 *));
     for (int j = 0; j < num_tables; j++)
     {
-        table->tables[j] = (Table *)malloc(sizeof(Table));
-        init_table(table->tables[j], num_tables, frames_amount, page_size, policy);
+        table->tables[j] = (TableMultilevel2 *)malloc(sizeof(TableMultilevel2));
+        init_table_multinivel2(table->tables[j], sqrt(num_tables), frames_amount, page_size, policy);
     }
     table->size = num_tables;
     table->policy = policy;
@@ -37,7 +38,7 @@ void init_table_multinivel2(TableMultilevel2 *table, long num_tables, long frame
 
 }
 
-void process_address_multinivel2(TableMultilevel2 *table, Frame **frames, unsigned addr, char operation)
+void process_address_multinivel3(TableMultilevel3 *table, Frame **frames, unsigned addr, char operation)
 {
     if (addr == -1 || operation == '\0')
     {
@@ -50,7 +51,7 @@ void process_address_multinivel2(TableMultilevel2 *table, Frame **frames, unsign
     // printf("%x\n%d: %x %d: %x\n", addr, table->shift_table, tableIndex, table->shift_addrs, newAddr);
 
     int aux_page_faults = table->tables[tableIndex]->page_faults;
-    process_address(table->tables[tableIndex], frames, newAddr, operation);
+    process_address_multinivel2(table->tables[tableIndex], frames, newAddr, operation);
     if (operation == 'W')
     {
         table->pages_read++;

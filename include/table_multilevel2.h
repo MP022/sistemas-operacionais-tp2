@@ -2,7 +2,7 @@
 #define TABLE_MULTILEVEL2
 
 #include "frame.h"
-#include "page.h"
+#include "table.h"
 #include "util.h"
 
 

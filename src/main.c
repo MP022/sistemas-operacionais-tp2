@@ -3,6 +3,7 @@
 #include <math.h>
 #include "../include/table.h"
 #include "../include/table_multilevel2.h"
+#include "../include/table_multilevel3.h"
 
 char *replacement_policy;
 char *diretorio;
@@ -11,8 +12,10 @@ unsigned physical_mem_size;
 unsigned numFrames;
 Table *table;
 TableMultilevel2 *tableMultilevel2;
+TableMultilevel3 *tableMultilevel3;
 Frame ** frames;
 Frame ** framesMultilevel2;
+Frame ** framesMultilevel3;
 unsigned long BITS_32 = 4294967296;
 void read_entry(int argc, char **argv)
 {
@@ -30,10 +33,13 @@ void read_entry(int argc, char **argv)
     long numPages = BITS_32 / page_size;
     table = (Table *)malloc(sizeof(Table));
     tableMultilevel2 = (TableMultilevel2 *)malloc(sizeof(TableMultilevel2));
-    init_table(table, numPages, page_size, numFrames, replacement_policy);
+    tableMultilevel3 = (TableMultilevel3 *)malloc(sizeof(TableMultilevel3));
+    init_table(table, numPages, numFrames, page_size, replacement_policy);
     init_table_multinivel2(tableMultilevel2, sqrtl(numPages), numFrames, page_size, replacement_policy);
-    frames = (Frame **)malloc(numFrames * sizeof(Frame *));
+    init_table_multinivel3(tableMultilevel3, sqrtl(numPages), numFrames, page_size, replacement_policy);
+    frames            = (Frame **)malloc(numFrames * sizeof(Frame *));
     framesMultilevel2 = (Frame **)malloc(numFrames * sizeof(Frame *));
+    framesMultilevel3 = (Frame **)malloc(numFrames * sizeof(Frame *));
     
     for (int i = 0; i < numFrames; i++)
     {
@@ -46,7 +52,13 @@ void read_entry(int argc, char **argv)
         framesMultilevel2[i]->page = NULL;
         framesMultilevel2[i]->id = i;
         framesMultilevel2[i]->reference = 0;
+
+        framesMultilevel3[i] = (Frame *)malloc(sizeof(Frame));
+        framesMultilevel3[i]->page = NULL;
+        framesMultilevel3[i]->id = i;
+        framesMultilevel3[i]->reference = 0;
     }
+
     if(table->policy == RANDOM){
         srand(time(NULL));
     }
@@ -58,10 +70,7 @@ int main(int argc, char **argv)
     read_entry(argc, argv);
     printf("Executando o simulador...\n");
    
-
-    FILE *arqEntrada;
-
-    arqEntrada = fopen(diretorio, "r");
+    FILE *arqEntrada = fopen(diretorio, "r");
     if (arqEntrada == NULL)
     {
         printf("Erro: O arquivo de entrada não pode ser aberto.\n");
@@ -75,6 +84,7 @@ int main(int argc, char **argv)
         fscanf(arqEntrada, "%x %c", &addr, &rw);
         process_address(table, frames, addr, rw);
         process_address_multinivel2(tableMultilevel2, framesMultilevel2, addr, rw);
+        // process_address_multinivel3(tableMultilevel3, framesMultilevel3, addr, rw);
         table->interaction_counter++;
         addr = -1;
         rw = '\0';
@@ -96,10 +106,20 @@ int main(int argc, char **argv)
     printf("Total de acessos: %d\n", table->pages_write + table->pages_read);
 
     printf("\nRelatório: Tabela Hierárquica de 2 níveis\n");
-    printf("Quantidade de páginas: %ld\n", tableMultilevel2->size);
+    printf("Quantidade de tabelas na primeira camada: %ld\n", tableMultilevel2->size);
+    printf("Quantidade de páginas na segunda camada: %ld\n", tableMultilevel2->tables[0]->size);
     printf("Page faults: %d\n", tableMultilevel2->page_faults);
     printf("Páginas lidas: %d\n", tableMultilevel2->pages_read);
     printf("Páginas escritas: %d\n", tableMultilevel2->pages_write);
     printf("Total de acessos: %d\n", tableMultilevel2->pages_write + tableMultilevel2->pages_read);
+
+    printf("\nRelatório: Tabela Hierárquica de 3 níveis\n");
+    printf("Quantidade de tabelas na primeira camada: %ld\n", tableMultilevel3->size);
+    printf("Quantidade de tabelas na segunda camada: %ld\n", tableMultilevel3->tables[0]->size);
+    printf("Quantidade de páginas na terceira camada: %ld\n", tableMultilevel3->tables[0]->tables[0]->size);
+    printf("Page faults: %d\n", tableMultilevel3->page_faults);
+    printf("Páginas lidas: %d\n", tableMultilevel3->pages_read);
+    printf("Páginas escritas: %d\n", tableMultilevel3->pages_write);
+    printf("Total de acessos: %d\n", tableMultilevel3->pages_write + tableMultilevel3->pages_read);
     return 0;
 }

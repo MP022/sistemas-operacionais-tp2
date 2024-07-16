@@ -4,7 +4,7 @@ SRC = src
 OBJ = obj
 INC = include
 BIN = bin
-OBJS = $(OBJ)/main.o $(OBJ)/page.o ${OBJ}/frame.o $(OBJ)/table.o $(OBJ)/table_multilevel2.o ${OBJ}/util.o
+OBJS = $(OBJ)/main.o $(OBJ)/page.o ${OBJ}/frame.o $(OBJ)/table.o $(OBJ)/table_multilevel2.o $(OBJ)/table_multilevel3.o ${OBJ}/util.o
 HDRS = 
 CFLAGS = -pg -Wall -c -I$(INC)
 
@@ -27,6 +27,9 @@ $(OBJ)/table.o: $(HDRS) $(SRC)/table.c
 
 $(OBJ)/table_multilevel2.o: $(HDRS) $(SRC)/table_multilevel2.c
 	$(CC) $(CFLAGS) -o $(OBJ)/table_multilevel2.o $(SRC)/table_multilevel2.c
+	
+$(OBJ)/table_multilevel3.o: $(HDRS) $(SRC)/table_multilevel3.c
+	$(CC) $(CFLAGS) -o $(OBJ)/table_multilevel3.o $(SRC)/table_multilevel3.c
 
 $(OBJ)/frame.o: $(HDRS) $(SRC)/frame.c
 	$(CC) $(CFLAGS) -o $(OBJ)/frame.o $(SRC)/frame.c
