@@ -36,17 +36,14 @@ void read_entry(int argc, char **argv)
 
     table = (Table *)malloc(sizeof(Table));
     tableMultilevel2 = (TableMultilevel2 *)malloc(sizeof(TableMultilevel2));
-    tableMultilevel3 = (TableMultilevel3 *)malloc(sizeof(TableMultilevel3));
     tableInverted = (TableInverted *)malloc(sizeof(TableInverted));
 
     init_table(table, numPages, numFrames, page_size, replacement_policy);
     init_table_multinivel2(tableMultilevel2, sqrtl(numPages), numFrames, page_size, replacement_policy);
-    init_table_multinivel3(tableMultilevel3, sqrtl(numPages), numFrames, page_size, replacement_policy);
     init_table_inverted(tableInverted, numFrames, page_size, replacement_policy);
 
     frames            = (Frame **)malloc(numFrames * sizeof(Frame *));
     framesMultilevel2 = (Frame **)malloc(numFrames * sizeof(Frame *));
-    framesMultilevel3 = (Frame **)malloc(numFrames * sizeof(Frame *));
     framesInverted    = (Frame **)malloc(numFrames * sizeof(Frame *));
     
     for (int i = 0; i < numFrames; i++)
@@ -60,11 +57,6 @@ void read_entry(int argc, char **argv)
         framesMultilevel2[i]->page = NULL;
         framesMultilevel2[i]->id = i;
         framesMultilevel2[i]->reference = 0;
-
-        framesMultilevel3[i] = (Frame *)malloc(sizeof(Frame));
-        framesMultilevel3[i]->page = NULL;
-        framesMultilevel3[i]->id = i;
-        framesMultilevel3[i]->reference = 0;
 
         framesInverted[i] = (Frame *)malloc(sizeof(Frame));
         framesInverted[i]->page = NULL;
@@ -97,11 +89,9 @@ int main(int argc, char **argv)
         fscanf(arqEntrada, "%x %c", &addr, &rw);
         process_address(table, frames, addr, rw);
         process_address_multinivel2(tableMultilevel2, framesMultilevel2, addr, rw);
-        // process_address_multinivel3(tableMultilevel3, framesMultilevel3, addr, rw);
         process_address_inverted(tableInverted, framesInverted, addr, rw);
         table->interaction_counter++;
         tableMultilevel2->interaction_counter++;
-        tableMultilevel3->interaction_counter++;
         tableInverted->interaction_counter++;
         addr = -1;
         rw = '\0';
@@ -130,14 +120,14 @@ int main(int argc, char **argv)
     printf("Páginas escritas: %d\n", tableMultilevel2->pages_write);
     printf("Total de acessos: %d\n", tableMultilevel2->pages_write + tableMultilevel2->pages_read);
 
-    printf("\nRelatório: Tabela Hierárquica de 3 níveis\n");
-    printf("Quantidade de tabelas na primeira camada: %ld\n", tableMultilevel3->size);
-    printf("Quantidade de tabelas na segunda camada: %ld\n", tableMultilevel3->tables[0]->size);
-    printf("Quantidade de páginas na terceira camada: %ld\n", tableMultilevel3->tables[0]->tables[0]->size);
-    printf("Page faults: %d\n", tableMultilevel3->page_faults);
-    printf("Páginas lidas: %d\n", tableMultilevel3->pages_read);
-    printf("Páginas escritas: %d\n", tableMultilevel3->pages_write);
-    printf("Total de acessos: %d\n", tableMultilevel3->pages_write + tableMultilevel3->pages_read);
+    // printf("\nRelatório: Tabela Hierárquica de 3 níveis\n");
+    // printf("Quantidade de tabelas na primeira camada: %ld\n", tableMultilevel3->size);
+    // printf("Quantidade de tabelas na segunda camada: %ld\n", tableMultilevel3->tables[0]->size);
+    // printf("Quantidade de páginas na terceira camada: %ld\n", tableMultilevel3->tables[0]->tables[0]->size);
+    // printf("Page faults: %d\n", tableMultilevel3->page_faults);
+    // printf("Páginas lidas: %d\n", tableMultilevel3->pages_read);
+    // printf("Páginas escritas: %d\n", tableMultilevel3->pages_write);
+    // printf("Total de acessos: %d\n", tableMultilevel3->pages_write + tableMultilevel3->pages_read);
 
     printf("\nRelatório: Tabela Invertida\n");
     printf("Quantidade de páginas: %ld\n", tableInverted->frames_amount);

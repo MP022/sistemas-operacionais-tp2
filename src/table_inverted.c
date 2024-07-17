@@ -100,7 +100,7 @@ Frame *get_page_frame(Frame **frames, TableInverted *table, unsigned pageId)
     unsigned num_frames = table->frames_amount;
     Page *least_recently_used = NULL;
     Frame *oldest_allocated = NULL;
-    for (int i = 0; i < num_frames - 1; i++)
+    for (int i = 0; i < num_frames ; i++)
     {
         Page * page = table->pages[i];
         if (page->id == -1)
@@ -121,6 +121,7 @@ Frame *get_page_frame(Frame **frames, TableInverted *table, unsigned pageId)
             oldest_allocated = frames[page->frame];
         }
     }
+
     switch (table->policy){
     case LRU:
         frames[least_recently_used->frame]->page->valid = 0;

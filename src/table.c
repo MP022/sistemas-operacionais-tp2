@@ -55,11 +55,13 @@ void process_address(Table *table, Frame **frames, unsigned addr, char operation
 ReplacementPolicty select_policy(char *policy)
 {
     if (string_equals(policy, "lru"))
-    {
         return LRU;
-    }
     if (string_equals(policy, "fifo"))
         return FIFO;
+    if(string_equals(policy, "2a"))
+        return SECOND_CHANCE;
+    if(string_equals(policy, "random"))
+        return RANDOM;
 
     printf("Invalid policy passed, %s", policy);
     exit(1);
@@ -108,7 +110,7 @@ Frame *get_free_frame(Frame **frames, Table *table)
     unsigned num_frames = table->frames_amount;
     Page *least_recently_used = NULL;
     Frame *oldest_allocated = NULL;
-    for (int i = 0; i < num_frames - 1; i++)
+    for (int i = 0; i < num_frames ; i++)
     {
         Frame * frame = frames[i];
         if (frame->page == NULL)
@@ -140,6 +142,7 @@ Frame *get_free_frame(Frame **frames, Table *table)
             }
             frame->reference = 0;
         }
+        return frames[0];
     case RANDOM:
         return frames[rand() % num_frames];
     default:
